@@ -24,3 +24,6 @@ services:
 
     App\Domain\Port\LogoRepositoryInterface:
         alias: App\Infrastructure\Persistence\Doctrine\Repository\DoctrineLogoRepository
+
+    App\Domain\Port\UserRepositoryInterface:
+        alias: App\Infrastructure\Persistence\Doctrine\Repository\DoctrineUserRepository
