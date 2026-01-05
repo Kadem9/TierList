@@ -11,5 +11,7 @@ interface LogoRepositoryInterface
     public function findAll(): array;
 
     public function findByInternalId(string $id): ?Logo;
+
+    public function countAll(): int;
 }
 
