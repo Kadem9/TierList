@@ -36,7 +36,7 @@ class MinioS3Adapter implements PdfStorageInterface
             'Bucket' => $this->bucket,
             'Key' => $filename,
             'Body' => $content,
-            'ContentType' => 'text/html',
+            'ContentType' => 'application/pdf',
         ]);
 
         return $result->get('ObjectURL') ?? $this->s3Client->getObjectUrl($this->bucket, $filename);

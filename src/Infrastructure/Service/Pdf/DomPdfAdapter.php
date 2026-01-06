@@ -38,5 +38,26 @@ class DomPdfAdapter implements PdfGeneratorInterface
 
         return $html;
     }
+
+    public function generatePdf(TierList $tierList): string
+    {
+        // Générer le HTML d'abord
+        $html = $this->generateHtml($tierList);
+
+        // Créer une instance Dompdf
+        $dompdf = new Dompdf();
+
+        // Charger le HTML dans Dompdf
+        $dompdf->loadHtml($html);
+
+        // Configurer les options
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Rendre le PDF
+        $dompdf->render();
+
+        // Retourner le contenu binaire du PDF
+        return $dompdf->output();
+    }
 }
 

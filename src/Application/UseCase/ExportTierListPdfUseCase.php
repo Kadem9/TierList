@@ -25,14 +25,14 @@ class ExportTierListPdfUseCase
             throw new \RuntimeException('Aucune tier list trouvée pour cet utilisateur.');
         }
 
-        // On peut générer le contenu HTML via PdfGeneratorInterface
-        $htmlContent = $this->pdfGenerator->generateHtml($tierList);
+        // Générer le contenu PDF binaire via PdfGeneratorInterface
+        $pdfContent = $this->pdfGenerator->generatePdf($tierList);
 
-        // fichier unique
-        $filename = sprintf('tierlist_%s_%s.html', $user->getId(), date('Y-m-d_His'));
+        // fichier unique avec extension .pdf
+        $filename = sprintf('tierlist_%s_%s.pdf', $user->getId(), date('Y-m-d_His'));
 
-        // Sauvegarder le contenu via PdfStorageInterface
-        $url = $this->pdfStorage->store($filename, $htmlContent);
+        // Sauvegarder le contenu PDF via PdfStorageInterface
+        $url = $this->pdfStorage->store($filename, $pdfContent);
 
         return $url;
     }
