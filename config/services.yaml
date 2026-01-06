@@ -27,3 +27,6 @@ services:
 
     App\Domain\Port\UserRepositoryInterface:
         alias: App\Infrastructure\Persistence\Doctrine\Repository\DoctrineUserRepository
+
+    App\Domain\Port\TierListRepositoryInterface:
+        alias: App\Infrastructure\Persistence\Doctrine\Repository\DoctrineTierListRepository
