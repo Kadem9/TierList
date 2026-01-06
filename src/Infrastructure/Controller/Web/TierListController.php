@@ -7,6 +7,7 @@ use App\Application\UseCase\ExportTierListPdfUseCase;
 use App\Domain\Model\TierCategory;
 use App\Domain\Port\LogoProviderInterface;
 use App\Domain\Port\LogoRepositoryInterface;
+use App\Domain\Port\PdfStorageInterface;
 use App\Domain\Port\TierListRepositoryInterface;
 use App\Infrastructure\Persistence\Doctrine\Entity\DoctrineUser;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,7 +25,8 @@ class TierListController extends AbstractController
         private readonly TierListRepositoryInterface $tierListRepository,
         private readonly ClassifyLogoUseCase $classifyLogoUseCase,
         private readonly ExportTierListPdfUseCase $exportTierListPdfUseCase,
-        private readonly LogoProviderInterface $logoProvider
+        private readonly LogoProviderInterface $logoProvider,
+        private readonly PdfStorageInterface $pdfStorage
     ) {
     }
 
@@ -108,15 +110,11 @@ class TierListController extends AbstractController
         $user = $doctrineUser->toDomain();
 
         try {
-            // Générer le PDF et obtenir l'URL
-            $url = $this->exportTierListPdfUseCase->execute($user);
+            // Générer le PDF et obtenir le filename
+            $filename = $this->exportTierListPdfUseCase->execute($user);
             
-            // Récupérer le contenu du fichier depuis l'URL
-            $pdfContent = file_get_contents($url);
-            
-            if ($pdfContent === false) {
-                throw new \RuntimeException('Impossible de récupérer le fichier PDF.');
-            }
+            // Récupérer le contenu du fichier via PdfStorageInterface (utilise les credentials S3)
+            $pdfContent = $this->pdfStorage->getFileContent($filename);
 
             // Créer une réponse avec le contenu PDF
             $response = new Response($pdfContent);

@@ -32,9 +32,10 @@ class ExportTierListPdfUseCase
         $filename = sprintf('tierlist_%s_%s.pdf', $user->getId(), date('Y-m-d_His'));
 
         // Sauvegarder le contenu PDF via PdfStorageInterface
-        $url = $this->pdfStorage->store($filename, $pdfContent);
+        $this->pdfStorage->store($filename, $pdfContent);
 
-        return $url;
+        // Retourner le filename pour pouvoir récupérer le contenu ensuite
+        return $filename;
     }
 }
 
