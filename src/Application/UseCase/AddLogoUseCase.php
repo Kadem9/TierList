@@ -28,6 +28,12 @@ class AddLogoUseCase
             throw new LogoAlreadyExistsException($id);
         }
 
+        // Vérifier si un logo avec le même nom existe déjà (évite les doublons)
+        $existingLogo = $this->logoRepository->findByName($name);
+        if ($existingLogo !== null) {
+            throw new LogoAlreadyExistsException($name);
+        }
+
         // Créer l'objet Logo et le sauvegarder
         $logo = new Logo($id, $name, $url);
         $this->logoRepository->save($logo);

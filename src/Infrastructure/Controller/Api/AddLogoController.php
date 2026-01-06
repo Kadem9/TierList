@@ -5,6 +5,7 @@ namespace App\Infrastructure\Controller\Api;
 use App\Application\UseCase\AddLogoUseCase;
 use App\Domain\Exception\LogoAlreadyExistsException;
 use App\Domain\Exception\LogoLimitReachedException;
+use App\Domain\Port\LogoProviderInterface;
 use App\Infrastructure\Controller\Api\DTO\AddLogoRequest;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
@@ -18,7 +19,8 @@ use Symfony\Component\Routing\Attribute\Route;
 class AddLogoController extends AbstractController
 {
     public function __construct(
-        private readonly AddLogoUseCase $addLogoUseCase
+        private readonly AddLogoUseCase $addLogoUseCase,
+        private readonly LogoProviderInterface $logoProvider
     ) {
     }
 
@@ -60,22 +62,43 @@ class AddLogoController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
-        if (!isset($data['id']) || !isset($data['name']) || !isset($data['url'])) {
+        if (!isset($data['name']) || empty($data['name'])) {
             return new JsonResponse(
-                ['error' => 'Les champs id, name et url sont requis.'],
+                ['error' => 'Le champ name est requis.'],
                 Response::HTTP_BAD_REQUEST
             );
         }
 
         try {
+            $name = trim($data['name']);
+
+            // Utiliser le nom comme domaine pour générer l'URL du logo
+            // Le LogoProvider vérifie automatiquement la disponibilité via l'API logo.dev
+            $domain = $this->normalizeDomain($name);
+
+            // Générer l'ID automatiquement (UUID v4)
+            $id = $this->generateUuid();
+
+            // Générer l'URL du logo automatiquement via LogoProviderInterface
+            // L'API logo.dev vérifie la disponibilité et retourne l'URL appropriée
+            $url = $this->logoProvider->getLogoUrl($domain);
+
+            // Passer l'objet complet au use case
             $this->addLogoUseCase->execute(
-                $data['id'],
-                $data['name'],
-                $data['url']
+                $id,
+                $name,
+                $url
             );
 
             return new JsonResponse(
-                ['message' => 'Logo ajouté avec succès.'],
+                [
+                    'message' => 'Logo ajouté avec succès.',
+                    'data' => [
+                        'id' => $id,
+                        'name' => $name,
+                        'url' => $url,
+                    ]
+                ],
                 Response::HTTP_CREATED
             );
         } catch (LogoLimitReachedException $e) {
@@ -89,6 +112,38 @@ class AddLogoController extends AbstractController
                 Response::HTTP_CONFLICT
             );
         }
+    }
+
+    // Cette fonction normalise le nom pr l'utiliser comme domaine, par exemple adidas : adidas.com
+    private function normalizeDomain(string $name): string
+    {
+        // Nettoyé le nom (minuscules, supprimer espaces)
+        $normalized = strtolower(trim($name));
+
+        // Si c'est déjà un domaine (contient un point), le retourner tel quel
+        if (strpos($normalized, '.') !== false) {
+            return $normalized;
+        }
+
+        // Sinon, ajouter .com par défaut
+        return $normalized . '.com';
+    }
+
+    private function generateUuid(): string
+    {
+        $data = random_bytes(16);
+
+        $data[6] = chr(ord($data[6]) & 0x0f | 0x40);
+        $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
+
+        return sprintf(
+            '%08s-%04s-%04s-%04s-%12s',
+            bin2hex(substr($data, 0, 4)),
+            bin2hex(substr($data, 4, 2)),
+            bin2hex(substr($data, 6, 2)),
+            bin2hex(substr($data, 8, 2)),
+            bin2hex(substr($data, 10, 6))
+        );
     }
 }
 

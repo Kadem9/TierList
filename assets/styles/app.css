@@ -129,17 +129,27 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   text-align: center;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 180px;
 }
 .logo-item:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 .logo-item img {
-  max-width: 100%;
+  width: 100%;
+  max-width: 120px;
   height: auto;
-  max-height: 100px;
+  min-height: 80px;
+  max-height: 120px;
   object-fit: contain;
   margin-bottom: 0.5rem;
+  background: #f9f9f9;
+  padding: 0.5rem;
+  border-radius: 4px;
 }
 .logo-item p {
   margin: 0.5rem 0;

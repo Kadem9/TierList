@@ -42,6 +42,15 @@ class DoctrineLogoRepository implements LogoRepositoryInterface
         return $doctrineLogo?->toDomain();
     }
 
+    public function findByName(string $name): ?Logo
+    {
+        $doctrineLogo = $this->entityManager
+            ->getRepository(DoctrineLogo::class)
+            ->findOneBy(['name' => $name]);
+
+        return $doctrineLogo?->toDomain();
+    }
+
     public function countAll(): int
     {
         return $this->entityManager
