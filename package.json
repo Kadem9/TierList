@@ -1,0 +1,19 @@
+{
+  "name": "tierlist",
+  "version": "1.0.0",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "build:css": "sass assets/styles/app.scss assets/styles/app.css",
+    "watch:css": "sass --watch assets/styles/app.scss:assets/styles/app.css"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "sass": "^1.97.1"
+  }
+}

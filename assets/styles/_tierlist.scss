@@ -1,0 +1,33 @@
+@import 'variables';
+
+.tier-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tier-category {
+  padding: 1rem;
+  border-radius: 8px;
+
+  &.tier-s {
+    background-color: $tier-s-color;
+  }
+
+  &.tier-a {
+    background-color: $tier-a-color;
+  }
+
+  &.tier-b {
+    background-color: $tier-b-color;
+  }
+
+  &.tier-c {
+    background-color: $tier-c-color;
+  }
+
+  &.tier-d {
+    background-color: $tier-d-color;
+  }
+}
+
