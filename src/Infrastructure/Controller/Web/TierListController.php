@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Controller\Web;
 
 use App\Application\UseCase\ClassifyLogoUseCase;
+use App\Application\UseCase\ExportTierListPdfUseCase;
 use App\Domain\Model\TierCategory;
 use App\Domain\Port\LogoRepositoryInterface;
 use App\Domain\Port\TierListRepositoryInterface;
@@ -19,7 +20,8 @@ class TierListController extends AbstractController
     public function __construct(
         private readonly LogoRepositoryInterface $logoRepository,
         private readonly TierListRepositoryInterface $tierListRepository,
-        private readonly ClassifyLogoUseCase $classifyLogoUseCase
+        private readonly ClassifyLogoUseCase $classifyLogoUseCase,
+        private readonly ExportTierListPdfUseCase $exportTierListPdfUseCase
     ) {
     }
 
@@ -91,6 +93,23 @@ class TierListController extends AbstractController
         }
 
         return $this->redirectToRoute('tier_list_index');
+    }
+
+    #[Route('/tier-list/export', name: 'tier_list_export', methods: ['GET'])]
+    #[IsGranted('ROLE_USER')]
+    public function export(): RedirectResponse
+    {
+        /** @var DoctrineUser $doctrineUser */
+        $doctrineUser = $this->getUser();
+        $user = $doctrineUser->toDomain();
+
+        try {
+            $url = $this->exportTierListPdfUseCase->execute($user);
+            return $this->redirect($url);
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'Erreur lors de l\'export : ' . $e->getMessage());
+            return $this->redirectToRoute('tier_list_index');
+        }
     }
 }
 

@@ -30,3 +30,16 @@ services:
 
     App\Domain\Port\TierListRepositoryInterface:
         alias: App\Infrastructure\Persistence\Doctrine\Repository\DoctrineTierListRepository
+
+    App\Domain\Port\PdfStorageInterface:
+        alias: App\Infrastructure\Service\Storage\MinioS3Adapter
+
+    App\Domain\Port\PdfGeneratorInterface:
+        alias: App\Infrastructure\Service\Pdf\DomPdfAdapter
+
+    App\Infrastructure\Service\Storage\MinioS3Adapter:
+        arguments:
+            $endpoint: '%env(S3_ENDPOINT)%'
+            $key: '%env(S3_KEY)%'
+            $secret: '%env(S3_SECRET)%'
+            $bucket: '%env(S3_BUCKET)%'
