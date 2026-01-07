@@ -1,0 +1,10 @@
+app.swagger_ui:
+    path: /swagger-ui/index.html #vérifier avec Acil si ok
+    methods: GET
+    defaults: { _controller: nelmio_api_doc.controller.swagger_ui }
+
+app.swagger:
+    path: /swagger.json
+    methods: GET
+    defaults: { _controller: nelmio_api_doc.controller.swagger }
+
