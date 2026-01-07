@@ -5,6 +5,7 @@ namespace App\Infrastructure\Controller\Web;
 use App\Application\UseCase\ClassifyLogoUseCase;
 use App\Application\UseCase\ExportTierListPdfUseCase;
 use App\Domain\Model\TierCategory;
+use App\Domain\Port\LogoProviderInterface;
 use App\Domain\Port\LogoRepositoryInterface;
 use App\Domain\Port\TierListRepositoryInterface;
 use App\Infrastructure\Persistence\Doctrine\Entity\DoctrineUser;
@@ -21,7 +22,8 @@ class TierListController extends AbstractController
         private readonly LogoRepositoryInterface $logoRepository,
         private readonly TierListRepositoryInterface $tierListRepository,
         private readonly ClassifyLogoUseCase $classifyLogoUseCase,
-        private readonly ExportTierListPdfUseCase $exportTierListPdfUseCase
+        private readonly ExportTierListPdfUseCase $exportTierListPdfUseCase,
+        private readonly LogoProviderInterface $logoProvider
     ) {
     }
 
@@ -63,6 +65,7 @@ class TierListController extends AbstractController
         return $this->render('tier_list/index.html.twig', [
             'logosByCategory' => $logosByCategory,
             'unclassifiedLogos' => $unclassifiedLogos,
+            'logoProvider' => $this->logoProvider,
         ]);
     }
 

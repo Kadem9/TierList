@@ -20,9 +20,10 @@
         <div class="logo-bank-grid">
             {% for logo in unclassifiedLogos %}
                 <div class="logo-item" data-logo-id="{{ logo.id }}">
-                    <img src="{{ logo.url }}" alt="{{ logo.name }}" />
+                    <img src="{{ logoProvider.getLogoUrl(logo.name) }}" alt="{{ logo.name }}" />
                     <p>{{ logo.name }}</p>
                     <form method="POST" action="{{ path('tier_list_move') }}" class="move-form">
+                        <input type="hidden" name="_token" value="{{ csrf_token('tier_list_move') }}" />
                         <input type="hidden" name="logoId" value="{{ logo.id }}" />
                         <select name="category" class="category-select">
                             <option value="">Choisir une catégorie</option>
@@ -47,7 +48,7 @@
             <div class="tier-logos">
                 {% for logo in logosByCategory.S %}
                     <div class="logo-item" data-logo-id="{{ logo.id }}">
-                        <img src="{{ logo.url }}" alt="{{ logo.name }}" />
+                        <img src="{{ logoProvider.getLogoUrl(logo.name) }}" alt="{{ logo.name }}" />
                         <p>{{ logo.name }}</p>
                         <form method="POST" action="{{ path('tier_list_move') }}" class="move-form">
                             <input type="hidden" name="_token" value="{{ csrf_token('tier_list_move') }}" />
@@ -73,7 +74,7 @@
             <div class="tier-logos">
                 {% for logo in logosByCategory.A %}
                     <div class="logo-item" data-logo-id="{{ logo.id }}">
-                        <img src="{{ logo.url }}" alt="{{ logo.name }}" />
+                        <img src="{{ logoProvider.getLogoUrl(logo.name) }}" alt="{{ logo.name }}" />
                         <p>{{ logo.name }}</p>
                         <form method="POST" action="{{ path('tier_list_move') }}" class="move-form">
                             <input type="hidden" name="_token" value="{{ csrf_token('tier_list_move') }}" />
@@ -99,7 +100,7 @@
             <div class="tier-logos">
                 {% for logo in logosByCategory.B %}
                     <div class="logo-item" data-logo-id="{{ logo.id }}">
-                        <img src="{{ logo.url }}" alt="{{ logo.name }}" />
+                        <img src="{{ logoProvider.getLogoUrl(logo.name) }}" alt="{{ logo.name }}" />
                         <p>{{ logo.name }}</p>
                         <form method="POST" action="{{ path('tier_list_move') }}" class="move-form">
                             <input type="hidden" name="_token" value="{{ csrf_token('tier_list_move') }}" />
@@ -125,7 +126,7 @@
             <div class="tier-logos">
                 {% for logo in logosByCategory.C %}
                     <div class="logo-item" data-logo-id="{{ logo.id }}">
-                        <img src="{{ logo.url }}" alt="{{ logo.name }}" />
+                        <img src="{{ logoProvider.getLogoUrl(logo.name) }}" alt="{{ logo.name }}" />
                         <p>{{ logo.name }}</p>
                         <form method="POST" action="{{ path('tier_list_move') }}" class="move-form">
                             <input type="hidden" name="_token" value="{{ csrf_token('tier_list_move') }}" />
@@ -151,7 +152,7 @@
             <div class="tier-logos">
                 {% for logo in logosByCategory.D %}
                     <div class="logo-item" data-logo-id="{{ logo.id }}">
-                        <img src="{{ logo.url }}" alt="{{ logo.name }}" />
+                        <img src="{{ logoProvider.getLogoUrl(logo.name) }}" alt="{{ logo.name }}" />
                         <p>{{ logo.name }}</p>
                         <form method="POST" action="{{ path('tier_list_move') }}" class="move-form">
                             <input type="hidden" name="_token" value="{{ csrf_token('tier_list_move') }}" />

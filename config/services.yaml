@@ -43,3 +43,10 @@ services:
             $key: '%env(S3_KEY)%'
             $secret: '%env(S3_SECRET)%'
             $bucket: '%env(S3_BUCKET)%'
+
+    App\Infrastructure\Service\Logo\LogoDevProvider:
+        arguments:
+            $apiKey: '%env(LOGODEV_API_KEY)%'
+
+    App\Domain\Port\LogoProviderInterface:
+        alias: App\Infrastructure\Service\Logo\LogoDevProvider
