@@ -1,10 +1,36 @@
 .tier-list-container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 2rem;
 }
 .tier-list-container h1 {
   margin-top: 0;
+}
+
+.tier-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+.tier-list-header h1 {
+  margin: 0;
+}
+
+.btn-export-pdf {
+  background-color: #dc3545;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+.btn-export-pdf:hover {
+  background-color: #c82333;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .alert {
@@ -23,18 +49,74 @@
   border: 1px solid #f5c6cb;
 }
 
+.tier-list-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 3rem;
+}
+
+.tier-row {
+  display: flex;
+  align-items: stretch;
+  min-height: 180px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+.tier-row.tier-s {
+  background-color: #ff6b6b;
+}
+.tier-row.tier-a {
+  background-color: #4ecdc4;
+}
+.tier-row.tier-b {
+  background-color: #45b7d1;
+}
+.tier-row.tier-c {
+  background-color: #f9ca24;
+}
+.tier-row.tier-d {
+  background-color: #95a5a6;
+}
+
+.tier-label {
+  width: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  font-weight: bold;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  flex-shrink: 0;
+  border-right: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.tier-logos {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem;
+  align-items: flex-start;
+  align-content: flex-start;
+}
+
 .logo-bank {
-  margin-bottom: 2rem;
+  margin-top: 3rem;
   padding: 1.5rem;
   background-color: #f5f5f5;
   border-radius: 8px;
+  border: 2px solid #ddd;
 }
 .logo-bank h2 {
   margin-top: 0;
+  margin-bottom: 1.5rem;
+  color: #333;
 }
 
-.logo-bank-grid,
-.tier-logos {
+.logo-bank-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 1rem;
@@ -46,6 +128,11 @@
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.logo-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 .logo-item img {
   max-width: 100%;
@@ -58,6 +145,7 @@
   margin: 0.5rem 0;
   font-size: 0.9rem;
   font-weight: 500;
+  color: #333;
 }
 
 .move-form {
@@ -71,7 +159,14 @@
   padding: 0.5rem;
   border: 1px solid #ddd;
   border-radius: 4px;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  background-color: white;
+  cursor: pointer;
+}
+.category-select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
 .btn-move {
@@ -81,45 +176,14 @@
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 0.9rem;
-  transition: background-color 0.2s;
+  font-size: 0.85rem;
+  transition: background-color 0.2s ease;
 }
 .btn-move:hover {
   background-color: #0056b3;
 }
-
-.tier-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.tier-category {
-  padding: 1.5rem;
-  border-radius: 8px;
-  min-height: 150px;
-}
-.tier-category h2 {
-  margin-top: 0;
-  margin-bottom: 1rem;
-  font-size: 1.5rem;
-  color: white;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-}
-.tier-category.tier-s {
-  background-color: #ff6b6b;
-}
-.tier-category.tier-a {
-  background-color: #4ecdc4;
-}
-.tier-category.tier-b {
-  background-color: #45b7d1;
-}
-.tier-category.tier-c {
-  background-color: #f9ca24;
-}
-.tier-category.tier-d {
-  background-color: #95a5a6;
+.btn-move:active {
+  transform: scale(0.98);
 }
 
 .auth-container {
