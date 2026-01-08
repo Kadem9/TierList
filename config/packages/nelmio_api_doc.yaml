@@ -1,18 +1,10 @@
 nelmio_api_doc:
+    areas:
+        default:
+            path_patterns: [ ^/api ]
     documentation:
         info:
             title: TierList API
             description: API pour la gestion des logos et des tier lists
             version: 1.0.0
-    areas:
-        path_patterns:
-            - ^/api
-        host_patterns:
-            - ^api\.
-    routes:
-        path_patterns:
-            - ^/api
-    models:
-        namespaces:
-            - App\Domain\Model
 

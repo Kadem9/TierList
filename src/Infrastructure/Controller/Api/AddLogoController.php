@@ -5,6 +5,8 @@ namespace App\Infrastructure\Controller\Api;
 use App\Application\UseCase\AddLogoUseCase;
 use App\Domain\Exception\LogoAlreadyExistsException;
 use App\Domain\Exception\LogoLimitReachedException;
+use App\Infrastructure\Controller\Api\DTO\AddLogoRequest;
+use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -12,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+#[OA\Tag(name: 'Logos')]
 class AddLogoController extends AbstractController
 {
     public function __construct(
@@ -19,23 +22,16 @@ class AddLogoController extends AbstractController
     ) {
     }
 
-    #[Route('/api/logos', name: 'api_logos_add', methods: ['POST'])]
-    #[OA\Tag(name: 'Logos')]
+    #[Route('/api/logos', name: 'api_add_logo', methods: ['POST'])]
+    #[OA\Post(summary: 'Ajouter un nouveau logo')]
     #[OA\RequestBody(
         description: 'Données du logo à ajouter',
         required: true,
-        content: new OA\JsonContent(
-            required: ['id', 'name', 'url'],
-            properties: [
-                new OA\Property(property: 'id', type: 'string', description: 'Identifiant unique du logo (UUID)', example: '123e4567-e89b-12d3-a456-426614174000'),
-                new OA\Property(property: 'name', type: 'string', description: 'Nom du logo (domaine de l\'entreprise)', example: 'example.com'),
-                new OA\Property(property: 'url', type: 'string', description: 'URL du logo', example: 'https://example.com/logo.png'),
-            ]
-        )
+        content: new Model(type: AddLogoRequest::class)
     )]
     #[OA\Response(
         response: 201,
-        description: 'Logo ajouté avec succès',
+        description: 'Logo créé avec succès',
         content: new OA\JsonContent(
             properties: [
                 new OA\Property(property: 'message', type: 'string', example: 'Logo ajouté avec succès.')
@@ -44,7 +40,7 @@ class AddLogoController extends AbstractController
     )]
     #[OA\Response(
         response: 400,
-        description: 'Erreur de validation ou limite de 10 logos atteinte',
+        description: 'Limite de dix logos atteinte',
         content: new OA\JsonContent(
             properties: [
                 new OA\Property(property: 'error', type: 'string', example: 'La limite de 10 logos a été atteinte.')
@@ -53,7 +49,7 @@ class AddLogoController extends AbstractController
     )]
     #[OA\Response(
         response: 409,
-        description: 'Logo déjà existant',
+        description: 'Le logo existe déjà',
         content: new OA\JsonContent(
             properties: [
                 new OA\Property(property: 'error', type: 'string', example: 'Un logo avec l\'ID "123e4567-e89b-12d3-a456-426614174000" existe déjà.')
