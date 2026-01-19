@@ -41,7 +41,6 @@ class TierListController extends AbstractController
         $allLogos = $this->logoRepository->findAll();
         $tierList = $this->tierListRepository->findByUser($user);
 
-        // Logos par catégorie
         $logosByCategory = [
             'S' => [],
             'A' => [],
@@ -59,7 +58,6 @@ class TierListController extends AbstractController
             }
         }
 
-        // Logos non classés
         $unclassifiedLogos = array_filter(
             $allLogos,
             fn($logo) => !in_array($logo->getId(), $classifiedLogoIds)
@@ -69,6 +67,7 @@ class TierListController extends AbstractController
             'logosByCategory' => $logosByCategory,
             'unclassifiedLogos' => $unclassifiedLogos,
             'logoProvider' => $this->logoProvider,
+            'isPremium' => $doctrineUser->isPremium(),
         ]);
     }
 

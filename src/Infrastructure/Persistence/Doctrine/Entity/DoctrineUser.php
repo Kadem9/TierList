@@ -21,6 +21,9 @@ class DoctrineUser implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string')]
     private string $password;
 
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $isPremium = false;
+
     public function getId(): string
     {
         return $this->id;
@@ -51,6 +54,16 @@ class DoctrineUser implements UserInterface, PasswordAuthenticatedUserInterface
         $this->password = $password;
     }
 
+    public function isPremium(): bool
+    {
+        return $this->isPremium;
+    }
+
+    public function setIsPremium(bool $isPremium): void
+    {
+        $this->isPremium = $isPremium;
+    }
+
     public function getUserIdentifier(): string
     {
         return $this->email;
@@ -70,7 +83,8 @@ class DoctrineUser implements UserInterface, PasswordAuthenticatedUserInterface
         return new User(
             $this->id,
             $this->email,
-            $this->password
+            $this->password,
+            $this->isPremium
         );
     }
 
@@ -80,6 +94,7 @@ class DoctrineUser implements UserInterface, PasswordAuthenticatedUserInterface
         $doctrineUser->id = $user->getId();
         $doctrineUser->email = $user->getEmail();
         $doctrineUser->password = $user->getPassword();
+        $doctrineUser->isPremium = $user->isPremium();
 
         return $doctrineUser;
     }

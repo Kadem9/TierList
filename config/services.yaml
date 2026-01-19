@@ -50,3 +50,10 @@ services:
 
     App\Domain\Port\LogoProviderInterface:
         alias: App\Infrastructure\Service\Logo\LogoDevProvider
+
+    App\Infrastructure\Service\Payment\StripePaymentAdapter:
+        arguments:
+            $secretKey: '%env(STRIPE_SECRET_KEY)%'
+
+    App\Domain\Port\PaymentProviderInterface:
+        alias: App\Infrastructure\Service\Payment\StripePaymentAdapter

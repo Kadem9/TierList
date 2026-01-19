@@ -6,7 +6,12 @@
 <div class="tier-list-container">
     <div class="tier-list-header">
         <h1>Tier List</h1>
-        <a href="{{ path('tier_list_export') }}" class="btn-export-pdf">Exporter en PDF</a>
+        <div class="header-actions">
+            {% if not isPremium %}
+                <a href="{{ path('payment_subscribe') }}" class="btn-unlock">Débloquer la Tier List</a>
+            {% endif %}
+            <a href="{{ path('tier_list_export') }}" class="btn-export-pdf">Exporter en PDF</a>
+        </div>
     </div>
 
     {% for message in app.flashes('success') %}
@@ -19,158 +24,63 @@
 
     {# Grille avec 5 lignes colorées (S, A, B, C, D) #}
     <div class="tier-list-grid">
-        {# Section S - Chefs-d'œuvre #}
-        <div class="tier-row tier-s">
-            <div class="tier-label">S</div>
+        {% for tier, tierLabel in {'S': 'Chefs-d\'œuvre', 'A': 'Excellents', 'B': 'Bons', 'C': 'Moyens', 'D': 'À améliorer'} %}
+        <div class="tier-row tier-{{ tier|lower }}">
+            <div class="tier-label">{{ tier }}</div>
             <div class="tier-logos">
-                {% for logo in logosByCategory.S %}
+                {% for logo in logosByCategory[tier] %}
                     <div class="logo-item" data-logo-id="{{ logo.id }}">
                         <img src="{{ logo.url }}" alt="{{ logo.name }}" />
                         <p>{{ logo.name }}</p>
-                        <form method="POST" action="{{ path('tier_list_move') }}" class="move-form">
-                            <input type="hidden" name="_token" value="{{ csrf_token('tier_list_move') }}" />
-                            <input type="hidden" name="logoId" value="{{ logo.id }}" />
-                            <select name="category" class="category-select">
-                                <option value="">Choisir une catégorie</option>
-                                <option value="S" selected>S - Les chefs-d'œuvre du branding</option>
-                                <option value="A">A - Excellents logos</option>
-                                <option value="B">B - Bons logos</option>
-                                <option value="C">C - Logos moyens</option>
-                                <option value="D">D - Logos à améliorer</option>
-                            </select>
-                            <button type="submit" class="btn-move">Déplacer</button>
-                        </form>
+                        {% if isPremium %}
+                            <form method="POST" action="{{ path('tier_list_move') }}" class="move-form">
+                                <input type="hidden" name="_token" value="{{ csrf_token('tier_list_move') }}" />
+                                <input type="hidden" name="logoId" value="{{ logo.id }}" />
+                                <select name="category" class="category-select">
+                                    <option value="">Choisir</option>
+                                    <option value="S" {{ tier == 'S' ? 'selected' : '' }}>S</option>
+                                    <option value="A" {{ tier == 'A' ? 'selected' : '' }}>A</option>
+                                    <option value="B" {{ tier == 'B' ? 'selected' : '' }}>B</option>
+                                    <option value="C" {{ tier == 'C' ? 'selected' : '' }}>C</option>
+                                    <option value="D" {{ tier == 'D' ? 'selected' : '' }}>D</option>
+                                </select>
+                                <button type="submit" class="btn-move">Déplacer</button>
+                            </form>
+                        {% endif %}
                     </div>
                 {% endfor %}
             </div>
         </div>
-
-        {# Section A - Excellents logos #}
-        <div class="tier-row tier-a">
-            <div class="tier-label">A</div>
-            <div class="tier-logos">
-                {% for logo in logosByCategory.A %}
-                    <div class="logo-item" data-logo-id="{{ logo.id }}">
-                        <img src="{{ logo.url }}" alt="{{ logo.name }}" />
-                        <p>{{ logo.name }}</p>
-                        <form method="POST" action="{{ path('tier_list_move') }}" class="move-form">
-                            <input type="hidden" name="_token" value="{{ csrf_token('tier_list_move') }}" />
-                            <input type="hidden" name="logoId" value="{{ logo.id }}" />
-                            <select name="category" class="category-select">
-                                <option value="">Choisir une catégorie</option>
-                                <option value="S">S - Les chefs-d'œuvre du branding</option>
-                                <option value="A" selected>A - Excellents logos</option>
-                                <option value="B">B - Bons logos</option>
-                                <option value="C">C - Logos moyens</option>
-                                <option value="D">D - Logos à améliorer</option>
-                            </select>
-                            <button type="submit" class="btn-move">Déplacer</button>
-                        </form>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-
-        {# Section B - Bons logos #}
-        <div class="tier-row tier-b">
-            <div class="tier-label">B</div>
-            <div class="tier-logos">
-                {% for logo in logosByCategory.B %}
-                    <div class="logo-item" data-logo-id="{{ logo.id }}">
-                        <img src="{{ logo.url }}" alt="{{ logo.name }}" />
-                        <p>{{ logo.name }}</p>
-                        <form method="POST" action="{{ path('tier_list_move') }}" class="move-form">
-                            <input type="hidden" name="_token" value="{{ csrf_token('tier_list_move') }}" />
-                            <input type="hidden" name="logoId" value="{{ logo.id }}" />
-                            <select name="category" class="category-select">
-                                <option value="">Choisir une catégorie</option>
-                                <option value="S">S - Les chefs-d'œuvre du branding</option>
-                                <option value="A">A - Excellents logos</option>
-                                <option value="B" selected>B - Bons logos</option>
-                                <option value="C">C - Logos moyens</option>
-                                <option value="D">D - Logos à améliorer</option>
-                            </select>
-                            <button type="submit" class="btn-move">Déplacer</button>
-                        </form>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-
-        {# Section C - Logos moyens #}
-        <div class="tier-row tier-c">
-            <div class="tier-label">C</div>
-            <div class="tier-logos">
-                {% for logo in logosByCategory.C %}
-                    <div class="logo-item" data-logo-id="{{ logo.id }}">
-                        <img src="{{ logo.url }}" alt="{{ logo.name }}" />
-                        <p>{{ logo.name }}</p>
-                        <form method="POST" action="{{ path('tier_list_move') }}" class="move-form">
-                            <input type="hidden" name="_token" value="{{ csrf_token('tier_list_move') }}" />
-                            <input type="hidden" name="logoId" value="{{ logo.id }}" />
-                            <select name="category" class="category-select">
-                                <option value="">Choisir une catégorie</option>
-                                <option value="S">S - Les chefs-d'œuvre du branding</option>
-                                <option value="A">A - Excellents logos</option>
-                                <option value="B">B - Bons logos</option>
-                                <option value="C" selected>C - Logos moyens</option>
-                                <option value="D">D - Logos à améliorer</option>
-                            </select>
-                            <button type="submit" class="btn-move">Déplacer</button>
-                        </form>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-
-        {# Section D - Logos à améliorer #}
-        <div class="tier-row tier-d">
-            <div class="tier-label">D</div>
-            <div class="tier-logos">
-                {% for logo in logosByCategory.D %}
-                    <div class="logo-item" data-logo-id="{{ logo.id }}">
-                        <img src="{{ logo.url }}" alt="{{ logo.name }}" />
-                        <p>{{ logo.name }}</p>
-                        <form method="POST" action="{{ path('tier_list_move') }}" class="move-form">
-                            <input type="hidden" name="_token" value="{{ csrf_token('tier_list_move') }}" />
-                            <input type="hidden" name="logoId" value="{{ logo.id }}" />
-                            <select name="category" class="category-select">
-                                <option value="">Choisir une catégorie</option>
-                                <option value="S">S - Les chefs-d'œuvre du branding</option>
-                                <option value="A">A - Excellents logos</option>
-                                <option value="B">B - Bons logos</option>
-                                <option value="C">C - Logos moyens</option>
-                                <option value="D" selected>D - Logos à améliorer</option>
-                            </select>
-                            <button type="submit" class="btn-move">Déplacer</button>
-                        </form>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
+        {% endfor %}
     </div>
 
-    {# Banque de logos non classés #}
     <div class="logo-bank">
         <h2>Banque de logos</h2>
+        {% if not isPremium %}
+            <p class="premium-notice">
+                <a href="{{ path('payment_subscribe') }}">Passez Premium</a> pour classer vos logos
+            </p>
+        {% endif %}
         <div class="logo-bank-grid">
             {% for logo in unclassifiedLogos %}
                 <div class="logo-item" data-logo-id="{{ logo.id }}">
                     <img src="{{ logo.url }}" alt="{{ logo.name }}" />
                     <p>{{ logo.name }}</p>
-                    <form method="POST" action="{{ path('tier_list_move') }}" class="move-form">
-                        <input type="hidden" name="_token" value="{{ csrf_token('tier_list_move') }}" />
-                        <input type="hidden" name="logoId" value="{{ logo.id }}" />
-                        <select name="category" class="category-select">
-                            <option value="">Choisir une catégorie</option>
-                            <option value="S">S - Les chefs-d'œuvre du branding</option>
-                            <option value="A">A - Excellents logos</option>
-                            <option value="B">B - Bons logos</option>
-                            <option value="C">C - Logos moyens</option>
-                            <option value="D">D - Logos à améliorer</option>
-                        </select>
-                        <button type="submit" class="btn-move">Déplacer</button>
-                    </form>
+                    {% if isPremium %}
+                        <form method="POST" action="{{ path('tier_list_move') }}" class="move-form">
+                            <input type="hidden" name="_token" value="{{ csrf_token('tier_list_move') }}" />
+                            <input type="hidden" name="logoId" value="{{ logo.id }}" />
+                            <select name="category" class="category-select">
+                                <option value="">Choisir</option>
+                                <option value="S">S</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                            </select>
+                            <button type="submit" class="btn-move">Déplacer</button>
+                        </form>
+                    {% endif %}
                 </div>
             {% endfor %}
         </div>

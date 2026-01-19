@@ -21,6 +21,12 @@
   }
 }
 
+.header-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
 .btn-export-pdf {
   background-color: #dc3545;
   color: white;
@@ -35,6 +41,38 @@
   &:hover {
     background-color: #c82333;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.btn-unlock {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 0.9rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  }
+}
+
+.premium-notice {
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  background-color: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 6px;
+  color: #856404;
+  font-size: 0.9rem;
+
+  a {
+    color: #664d03;
+    font-weight: bold;
   }
 }
 
