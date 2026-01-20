@@ -14,9 +14,8 @@ class DomPdfAdapter implements PdfGeneratorInterface
     ) {
     }
 
-    public function generateHtml(TierList $tierList): string
+    public function generateHtml(TierList $tierList, array $globalStats = []): string
     {
-        // logos par catégorie pour le template
         $logosByCategory = [
             'S' => [],
             'A' => [],
@@ -30,33 +29,22 @@ class DomPdfAdapter implements PdfGeneratorInterface
             $logosByCategory[$category][] = $item->getLogo();
         }
 
-        // Générer le HTML avec Twig
-        $html = $this->twig->render('tier_list/pdf_export.html.twig', [
+        return $this->twig->render('tier_list/pdf_export.html.twig', [
             'tierList' => $tierList,
             'logosByCategory' => $logosByCategory,
+            'globalStats' => $globalStats,
         ]);
-
-        return $html;
     }
 
-    public function generatePdf(TierList $tierList): string
+    public function generatePdf(TierList $tierList, array $globalStats = []): string
     {
-        // Générer le HTML d'abord
-        $html = $this->generateHtml($tierList);
+        $html = $this->generateHtml($tierList, $globalStats);
 
-        // Créer une instance Dompdf
         $dompdf = new Dompdf();
-
-        // Charger le HTML dans Dompdf
         $dompdf->loadHtml($html);
-
-        // Configurer les options
         $dompdf->setPaper('A4', 'portrait');
-
-        // Rendre le PDF
         $dompdf->render();
 
-        // Retourner le contenu binaire du PDF
         return $dompdf->output();
     }
 }

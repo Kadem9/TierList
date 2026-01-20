@@ -18,23 +18,20 @@ class ExportTierListPdfUseCase
 
     public function execute(User $user): string
     {
-        // Récupérer la TierList de l'utilisateur
         $tierList = $this->tierListRepository->findByUser($user);
 
         if ($tierList === null) {
             throw new \RuntimeException('Aucune tier list trouvée pour cet utilisateur.');
         }
 
-        // Générer le contenu PDF binaire via PdfGeneratorInterface
-        $pdfContent = $this->pdfGenerator->generatePdf($tierList);
+        $globalStats = $this->tierListRepository->getGlobalStatistics();
 
-        // fichier unique avec extension .pdf
+        $pdfContent = $this->pdfGenerator->generatePdf($tierList, $globalStats);
+
         $filename = sprintf('tierlist_%s_%s.pdf', $user->getId(), date('Y-m-d_His'));
 
-        // Sauvegarder le contenu PDF via PdfStorageInterface
         $this->pdfStorage->store($filename, $pdfContent);
 
-        // Retourner le filename pour pouvoir récupérer le contenu ensuite
         return $filename;
     }
 }

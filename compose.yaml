@@ -30,6 +30,10 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: root
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    volumes:
+      - ./docker/pgadmin/servers.json:/pgadmin4/servers.json:ro
+      - pgadmin_data:/var/lib/pgadmin
     networks:
       - app_network
     depends_on:
@@ -59,6 +63,7 @@ volumes:
   database_data:
 ###< doctrine/doctrine-bundle ###
   minio_data:
+  pgadmin_data:
 
 networks:
   app_network:

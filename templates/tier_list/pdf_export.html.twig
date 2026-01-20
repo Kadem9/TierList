@@ -4,137 +4,226 @@
     <meta charset="UTF-8">
     <title>Tier List Export</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            margin: 0;
+            padding: 20px;
+            font-size: 12px;
         }
         h1 {
             text-align: center;
             color: #333;
+            margin-bottom: 10px;
         }
-        .tier-category {
+        .page-break {
+            page-break-after: always;
+        }
+
+        /* Stats Page */
+        .stats-page {
+            padding: 20px 0;
+        }
+        .stats-header {
+            text-align: center;
             margin-bottom: 30px;
+        }
+        .stats-header h1 {
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        .stats-header p {
+            color: #666;
+            margin: 0;
+        }
+        .stats-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .stats-table th,
+        .stats-table td {
+            padding: 10px 8px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+        .stats-table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+        }
+        .stats-table tr:hover {
+            background-color: #f5f5f5;
+        }
+        .logo-cell {
+            text-align: left;
+            font-weight: 500;
+        }
+        .percent-bar {
+            display: inline-block;
+            height: 8px;
+            border-radius: 4px;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+        .cat-s { background-color: #ff6b6b; }
+        .cat-a { background-color: #4ecdc4; }
+        .cat-b { background-color: #45b7d1; }
+        .cat-c { background-color: #f9ca24; }
+        .cat-d { background-color: #95a5a6; }
+        .dominant {
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: white;
+        }
+        .dominant-s { background-color: #ff6b6b; }
+        .dominant-a { background-color: #4ecdc4; }
+        .dominant-b { background-color: #45b7d1; }
+        .dominant-c { background-color: #f9ca24; color: #333; }
+        .dominant-d { background-color: #95a5a6; }
+
+        /* Tier List Page */
+        .tier-category {
+            margin-bottom: 20px;
             padding: 15px;
             border-radius: 8px;
             page-break-inside: avoid;
         }
-        .tier-category.tier-s {
-            background-color: #ff6b6b;
-        }
-        .tier-category.tier-a {
-            background-color: #4ecdc4;
-        }
-        .tier-category.tier-b {
-            background-color: #45b7d1;
-        }
-        .tier-category.tier-c {
-            background-color: #f9ca24;
-        }
-        .tier-category.tier-d {
-            background-color: #95a5a6;
-        }
+        .tier-category.tier-s { background-color: #ff6b6b; }
+        .tier-category.tier-a { background-color: #4ecdc4; }
+        .tier-category.tier-b { background-color: #45b7d1; }
+        .tier-category.tier-c { background-color: #f9ca24; }
+        .tier-category.tier-d { background-color: #95a5a6; }
         .tier-category h2 {
-            margin-top: 0;
+            margin: 0 0 10px 0;
             color: white;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            font-size: 16px;
         }
         .tier-logos {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
         }
         .logo-item {
             background: white;
-            padding: 10px;
+            padding: 8px;
             border-radius: 4px;
             text-align: center;
+            width: 100px;
         }
         .logo-item img {
-            max-width: 100%;
-            height: auto;
-            max-height: 80px;
+            max-width: 80px;
+            height: 60px;
             object-fit: contain;
         }
         .logo-item p {
             margin: 5px 0 0 0;
-            font-size: 12px;
+            font-size: 10px;
             font-weight: 500;
+        }
+        .your-tierlist-header {
+            margin-top: 30px;
         }
     </style>
 </head>
 <body>
-    <h1>Tier List Export</h1>
+    {% if globalStats is not empty %}
+    <div class="stats-page">
+        <div class="stats-header">
+            <h1>Statistiques Globales</h1>
+            <p>Classement moyen de tous les utilisateurs</p>
+        </div>
 
-    {% if logosByCategory.S is not empty %}
-        <div class="tier-category tier-s">
-            <h2>S - Les chefs-d'œuvre du branding</h2>
+        <table class="stats-table">
+            <thead>
+                <tr>
+                    <th style="text-align: left;">Logo</th>
+                    <th>S</th>
+                    <th>A</th>
+                    <th>B</th>
+                    <th>C</th>
+                    <th>D</th>
+                    <th>Tendance</th>
+                    <th>Votes</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for stat in globalStats %}
+                <tr>
+                    <td class="logo-cell">{{ stat.logo.name }}</td>
+                    <td>
+                        {% if stat.percentages.S > 0 %}
+                        <span class="percent-bar cat-s" style="width: {{ stat.percentages.S }}px;"></span>
+                        {{ stat.percentages.S }}%
+                        {% else %}-{% endif %}
+                    </td>
+                    <td>
+                        {% if stat.percentages.A > 0 %}
+                        <span class="percent-bar cat-a" style="width: {{ stat.percentages.A }}px;"></span>
+                        {{ stat.percentages.A }}%
+                        {% else %}-{% endif %}
+                    </td>
+                    <td>
+                        {% if stat.percentages.B > 0 %}
+                        <span class="percent-bar cat-b" style="width: {{ stat.percentages.B }}px;"></span>
+                        {{ stat.percentages.B }}%
+                        {% else %}-{% endif %}
+                    </td>
+                    <td>
+                        {% if stat.percentages.C > 0 %}
+                        <span class="percent-bar cat-c" style="width: {{ stat.percentages.C }}px;"></span>
+                        {{ stat.percentages.C }}%
+                        {% else %}-{% endif %}
+                    </td>
+                    <td>
+                        {% if stat.percentages.D > 0 %}
+                        <span class="percent-bar cat-d" style="width: {{ stat.percentages.D }}px;"></span>
+                        {{ stat.percentages.D }}%
+                        {% else %}-{% endif %}
+                    </td>
+                    <td>
+                        <span class="dominant dominant-{{ stat.dominantCategory|lower }}">
+                            {{ stat.dominantCategory }} ({{ stat.dominantPercent }}%)
+                        </span>
+                    </td>
+                    <td>{{ stat.totalVotes }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="page-break"></div>
+    {% endif %}
+
+    <div class="your-tierlist-header">
+        <h1>Ma Tier List</h1>
+    </div>
+
+    {% for tier, tierData in {
+        'S': {'label': 'S - Les chefs-d\'œuvre du branding', 'class': 'tier-s'},
+        'A': {'label': 'A - Excellents logos', 'class': 'tier-a'},
+        'B': {'label': 'B - Bons logos', 'class': 'tier-b'},
+        'C': {'label': 'C - Logos moyens', 'class': 'tier-c'},
+        'D': {'label': 'D - Logos à améliorer', 'class': 'tier-d'}
+    } %}
+        {% if logosByCategory[tier] is not empty %}
+        <div class="tier-category {{ tierData.class }}">
+            <h2>{{ tierData.label }}</h2>
             <div class="tier-logos">
-                {% for logo in logosByCategory.S %}
-                    <div class="logo-item">
-                        <img src="{{ logo.url }}" alt="{{ logo.name }}" />
-                        <p>{{ logo.name }}</p>
-                    </div>
+                {% for logo in logosByCategory[tier] %}
+                <div class="logo-item">
+                    <img src="{{ logo.url }}" alt="{{ logo.name }}" />
+                    <p>{{ logo.name }}</p>
+                </div>
                 {% endfor %}
             </div>
         </div>
-    {% endif %}
-
-    {% if logosByCategory.A is not empty %}
-        <div class="tier-category tier-a">
-            <h2>A - Excellents logos</h2>
-            <div class="tier-logos">
-                {% for logo in logosByCategory.A %}
-                    <div class="logo-item">
-                        <img src="{{ logo.url }}" alt="{{ logo.name }}" />
-                        <p>{{ logo.name }}</p>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-    {% endif %}
-
-    {% if logosByCategory.B is not empty %}
-        <div class="tier-category tier-b">
-            <h2>B - Bons logos</h2>
-            <div class="tier-logos">
-                {% for logo in logosByCategory.B %}
-                    <div class="logo-item">
-                        <img src="{{ logo.url }}" alt="{{ logo.name }}" />
-                        <p>{{ logo.name }}</p>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-    {% endif %}
-
-    {% if logosByCategory.C is not empty %}
-        <div class="tier-category tier-c">
-            <h2>C - Logos moyens</h2>
-            <div class="tier-logos">
-                {% for logo in logosByCategory.C %}
-                    <div class="logo-item">
-                        <img src="{{ logo.url }}" alt="{{ logo.name }}" />
-                        <p>{{ logo.name }}</p>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-    {% endif %}
-
-    {% if logosByCategory.D is not empty %}
-        <div class="tier-category tier-d">
-            <h2>D - Logos à améliorer</h2>
-            <div class="tier-logos">
-                {% for logo in logosByCategory.D %}
-                    <div class="logo-item">
-                        <img src="{{ logo.url }}" alt="{{ logo.name }}" />
-                        <p>{{ logo.name }}</p>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-    {% endif %}
+        {% endif %}
+    {% endfor %}
 </body>
 </html>
-

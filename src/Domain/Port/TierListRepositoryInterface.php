@@ -10,5 +10,7 @@ interface TierListRepositoryInterface
     public function save(TierList $tierList): void;
 
     public function findByUser(User $user): ?TierList;
+
+    public function getGlobalStatistics(): array;
 }
 

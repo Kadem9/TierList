@@ -82,5 +82,69 @@ class DoctrineTierListRepository implements TierListRepositoryInterface
 
         return $doctrineTierList->toDomain($this->logoRepository);
     }
+
+    public function getGlobalStatistics(): array
+    {
+        $query = $this->entityManager->createQuery(
+            'SELECT i.logoId, i.tierCategory, COUNT(i.id) as count
+             FROM App\Infrastructure\Persistence\Doctrine\Entity\DoctrineTierListItem i
+             GROUP BY i.logoId, i.tierCategory'
+        );
+
+        $results = $query->getResult();
+
+        $stats = [];
+        $totalVotesPerLogo = [];
+
+        foreach ($results as $row) {
+            $logoId = $row['logoId'];
+            $category = $row['tierCategory']->value;
+            $count = (int) $row['count'];
+
+            if (!isset($stats[$logoId])) {
+                $stats[$logoId] = ['S' => 0, 'A' => 0, 'B' => 0, 'C' => 0, 'D' => 0];
+                $totalVotesPerLogo[$logoId] = 0;
+            }
+
+            $stats[$logoId][$category] = $count;
+            $totalVotesPerLogo[$logoId] += $count;
+        }
+
+        $formattedStats = [];
+        foreach ($stats as $logoId => $categories) {
+            $total = $totalVotesPerLogo[$logoId];
+            $logo = $this->logoRepository->findByInternalId($logoId);
+
+            if ($logo === null) {
+                continue;
+            }
+
+            $percentages = [];
+            $dominantCategory = 'S';
+            $maxPercent = 0;
+
+            foreach ($categories as $cat => $count) {
+                $percent = $total > 0 ? round(($count / $total) * 100) : 0;
+                $percentages[$cat] = $percent;
+
+                if ($percent > $maxPercent) {
+                    $maxPercent = $percent;
+                    $dominantCategory = $cat;
+                }
+            }
+
+            $formattedStats[] = [
+                'logo' => $logo,
+                'totalVotes' => $total,
+                'percentages' => $percentages,
+                'dominantCategory' => $dominantCategory,
+                'dominantPercent' => $maxPercent,
+            ];
+        }
+
+        usort($formattedStats, fn($a, $b) => $b['totalVotes'] <=> $a['totalVotes']);
+
+        return $formattedStats;
+    }
 }
 
