@@ -73,7 +73,7 @@ class TierListController extends AbstractController
 
     #[Route('/tier-list/move', name: 'tier_list_move', methods: ['POST'])]
     #[IsGranted('ROLE_USER')]
-    public function move(Request $request): RedirectResponse
+    public function move(Request $request): Response
     {
         /** @var DoctrineUser $doctrineUser */
         $doctrineUser = $this->getUser();
@@ -81,8 +81,12 @@ class TierListController extends AbstractController
 
         $logoId = $request->request->get('logoId');
         $category = $request->request->get('category');
+        $isAjax = $request->isXmlHttpRequest() || $request->headers->get('Accept') === 'application/json';
 
         if ($logoId === null || $category === null) {
+            if ($isAjax) {
+                return $this->json(['error' => 'Paramètres requis'], 400);
+            }
             $this->addFlash('error', 'Les paramètres logoId et category sont requis.');
             return $this->redirectToRoute('tier_list_index');
         }
@@ -90,10 +94,20 @@ class TierListController extends AbstractController
         try {
             $tierCategory = TierCategory::from($category);
             $this->classifyLogoUseCase->execute($user, $logoId, $tierCategory);
+
+            if ($isAjax) {
+                return $this->json(['success' => true]);
+            }
             $this->addFlash('success', 'Logo déplacé avec succès.');
         } catch (\ValueError $e) {
+            if ($isAjax) {
+                return $this->json(['error' => 'Catégorie invalide'], 400);
+            }
             $this->addFlash('error', 'Catégorie invalide.');
         } catch (\Exception $e) {
+            if ($isAjax) {
+                return $this->json(['error' => $e->getMessage()], 400);
+            }
             $this->addFlash('error', $e->getMessage());
         }
 

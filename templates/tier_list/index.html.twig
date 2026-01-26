@@ -22,31 +22,19 @@
         <div class="alert alert-error">{{ message }}</div>
     {% endfor %}
 
-    {# Grille avec 5 lignes colorées (S, A, B, C, D) #}
+    {% if isPremium %}
+        <p class="drag-hint">Glissez-déposez les logos pour les classer</p>
+    {% endif %}
+
     <div class="tier-list-grid">
         {% for tier, tierLabel in {'S': 'Chefs-d\'œuvre', 'A': 'Excellents', 'B': 'Bons', 'C': 'Moyens', 'D': 'À améliorer'} %}
-        <div class="tier-row tier-{{ tier|lower }}">
+        <div class="tier-row tier-{{ tier|lower }}" data-tier="{{ tier }}">
             <div class="tier-label">{{ tier }}</div>
             <div class="tier-logos">
                 {% for logo in logosByCategory[tier] %}
                     <div class="logo-item" data-logo-id="{{ logo.id }}">
                         <img src="{{ logo.url }}" alt="{{ logo.name }}" />
-                        <p>{{ logo.name }}</p>
-                        {% if isPremium %}
-                            <form method="POST" action="{{ path('tier_list_move') }}" class="move-form">
-                                <input type="hidden" name="_token" value="{{ csrf_token('tier_list_move') }}" />
-                                <input type="hidden" name="logoId" value="{{ logo.id }}" />
-                                <select name="category" class="category-select">
-                                    <option value="">Choisir</option>
-                                    <option value="S" {{ tier == 'S' ? 'selected' : '' }}>S</option>
-                                    <option value="A" {{ tier == 'A' ? 'selected' : '' }}>A</option>
-                                    <option value="B" {{ tier == 'B' ? 'selected' : '' }}>B</option>
-                                    <option value="C" {{ tier == 'C' ? 'selected' : '' }}>C</option>
-                                    <option value="D" {{ tier == 'D' ? 'selected' : '' }}>D</option>
-                                </select>
-                                <button type="submit" class="btn-move">Déplacer</button>
-                            </form>
-                        {% endif %}
+                        <span class="logo-name">{{ logo.name }}</span>
                     </div>
                 {% endfor %}
             </div>
@@ -54,7 +42,7 @@
         {% endfor %}
     </div>
 
-    <div class="logo-bank">
+    <div class="logo-bank" data-tier="bank">
         <h2>Banque de logos</h2>
         {% if not isPremium %}
             <p class="premium-notice">
@@ -65,25 +53,24 @@
             {% for logo in unclassifiedLogos %}
                 <div class="logo-item" data-logo-id="{{ logo.id }}">
                     <img src="{{ logo.url }}" alt="{{ logo.name }}" />
-                    <p>{{ logo.name }}</p>
-                    {% if isPremium %}
-                        <form method="POST" action="{{ path('tier_list_move') }}" class="move-form">
-                            <input type="hidden" name="_token" value="{{ csrf_token('tier_list_move') }}" />
-                            <input type="hidden" name="logoId" value="{{ logo.id }}" />
-                            <select name="category" class="category-select">
-                                <option value="">Choisir</option>
-                                <option value="S">S</option>
-                                <option value="A">A</option>
-                                <option value="B">B</option>
-                                <option value="C">C</option>
-                                <option value="D">D</option>
-                            </select>
-                            <button type="submit" class="btn-move">Déplacer</button>
-                        </form>
-                    {% endif %}
+                    <span class="logo-name">{{ logo.name }}</span>
                 </div>
             {% endfor %}
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/tierlist-dragdrop.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            new TierListDragDrop({
+                csrfToken: '{{ csrf_token('tier_list_move') }}',
+                moveUrl: '{{ path('tier_list_move') }}',
+                isPremium: {{ isPremium ? 'true' : 'false' }}
+            });
+        });
+    </script>
 {% endblock %}
