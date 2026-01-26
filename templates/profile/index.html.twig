@@ -1,0 +1,115 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Profil{% endblock %}
+
+{% block body %}
+<div class="profile-container">
+    <nav class="profile-nav">
+        <a href="{{ path('tier_list_index') }}" class="nav-back">
+            <span class="arrow">←</span> Retour à la Tier List
+        </a>
+        <a href="{{ path('logout') }}" class="nav-logout">Déconnexion</a>
+    </nav>
+
+    <header class="profile-header">
+        <div class="avatar">
+            <span>{{ user.email|slice(0, 1)|upper }}</span>
+        </div>
+        <div class="header-info">
+            <h1>Mon Profil</h1>
+            <p class="email">{{ user.email }}</p>
+        </div>
+    </header>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-error">{{ message }}</div>
+    {% endfor %}
+
+    <div class="profile-grid">
+        <section class="profile-card subscription-card">
+            <h2>Abonnement</h2>
+            <div class="subscription-status">
+                {% if user.isPremium %}
+                    <span class="badge badge-premium">Premium</span>
+                    <p>Vous avez accès à toutes les fonctionnalités</p>
+                    <ul class="features-list">
+                        <li class="active">Classement des logos</li>
+                        <li class="active">Export PDF avec statistiques</li>
+                        <li class="active">Drag & Drop</li>
+                    </ul>
+                {% else %}
+                    <span class="badge badge-free">Gratuit</span>
+                    <p>Passez Premium pour débloquer toutes les fonctionnalités</p>
+                    <ul class="features-list">
+                        <li class="inactive">Classement des logos</li>
+                        <li class="inactive">Export PDF avec statistiques</li>
+                        <li class="inactive">Drag & Drop</li>
+                    </ul>
+                    <a href="{{ path('payment_subscribe') }}" class="btn btn-premium">
+                        Passer Premium - 9,99 €
+                    </a>
+                {% endif %}
+            </div>
+        </section>
+
+        <section class="profile-card stats-card">
+            <h2>Statistiques</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-value">{{ stats.totalLogosClassified }}</span>
+                    <span class="stat-label">Logos classés</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">{{ user.isPremium ? 'Oui' : 'Non' }}</span>
+                    <span class="stat-label">Premium</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="profile-card security-card">
+            <h2>Sécurité</h2>
+            <form method="POST" action="{{ path('profile_change_password') }}" class="password-form">
+                <input type="hidden" name="_token" value="{{ csrf_token('change_password') }}" />
+                
+                <div class="form-group">
+                    <label for="current_password">Mot de passe actuel</label>
+                    <input type="password" id="current_password" name="current_password" required 
+                           placeholder="••••••••" autocomplete="current-password" />
+                </div>
+
+                <div class="form-group">
+                    <label for="new_password">Nouveau mot de passe</label>
+                    <input type="password" id="new_password" name="new_password" required 
+                           placeholder="••••••••" minlength="6" autocomplete="new-password" />
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm_password">Confirmer le mot de passe</label>
+                    <input type="password" id="confirm_password" name="confirm_password" required 
+                           placeholder="••••••••" minlength="6" autocomplete="new-password" />
+                </div>
+
+                <button type="submit" class="btn btn-primary">Modifier le mot de passe</button>
+            </form>
+        </section>
+
+        <section class="profile-card account-card">
+            <h2>Informations du compte</h2>
+            <div class="info-list">
+                <div class="info-item">
+                    <span class="info-label">Email</span>
+                    <span class="info-value">{{ user.email }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">ID utilisateur</span>
+                    <span class="info-value id-value">{{ user.id|slice(0, 8) }}...</span>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}

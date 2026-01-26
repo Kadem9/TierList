@@ -4,6 +4,14 @@
 
 {% block body %}
 <div class="tier-list-container">
+    <nav class="tier-list-nav">
+        <span class="nav-brand">TierList</span>
+        <div class="nav-links">
+            <a href="{{ path('profile_index') }}" class="nav-link">Mon Profil</a>
+            <a href="{{ path('logout') }}" class="nav-link nav-logout">Déconnexion</a>
+        </div>
+    </nav>
+
     <div class="tier-list-header">
         <h1>Tier List</h1>
         <div class="header-actions">

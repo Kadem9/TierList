@@ -35,6 +35,8 @@ security:
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/register, roles: PUBLIC_ACCESS }
         - { path: ^/tier-list, roles: ROLE_USER }
+        - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/payment, roles: ROLE_USER }
         - { path: ^/api, roles: PUBLIC_ACCESS }
 
 when@test:

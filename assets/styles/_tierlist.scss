@@ -10,6 +10,51 @@
   }
 }
 
+.tier-list-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+
+  .nav-brand {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #667eea;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .nav-link {
+    color: #4a5568;
+    text-decoration: none;
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: all 0.2s;
+
+    &:hover {
+      background: #f7fafc;
+      color: #667eea;
+    }
+
+    &.nav-logout {
+      color: #718096;
+      border: 1px solid #e2e8f0;
+
+      &:hover {
+        background: #fff;
+        border-color: #cbd5e0;
+      }
+    }
+  }
+}
+
 .tier-list-header {
   display: flex;
   justify-content: space-between;

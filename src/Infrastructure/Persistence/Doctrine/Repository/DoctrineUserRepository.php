@@ -47,6 +47,7 @@ class DoctrineUserRepository implements UserRepositoryInterface
 
         if ($doctrineUser !== null) {
             $doctrineUser->setEmail($user->getEmail());
+            $doctrineUser->setPassword($user->getPassword());
             $doctrineUser->setIsPremium($user->isPremium());
             $this->entityManager->flush();
         }
