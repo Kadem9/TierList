@@ -1,43 +1,73 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Connexion{% endblock %}
+{% block title %}Connexion - TierList{% endblock %}
 
 {% block body %}
-<div class="auth-container">
-    <div class="auth-card">
-        <h1>Connexion</h1>
+<div class="auth">
+    <div class="auth__panneau-decoratif">
+        <div class="auth__marque">
+            <div class="auth__logo">TierList</div>
+            <div class="auth__slogan">Classez • Comparez • Partagez</div>
+        </div>
+        <div class="auth__decorations">
+            <div class="auth__barre-decorative auth__barre-decorative--horizontale-haut"></div>
+            <div class="auth__barre-decorative auth__barre-decorative--horizontale-bas"></div>
+            <div class="auth__barre-decorative auth__barre-decorative--verticale-gauche"></div>
+            <div class="auth__barre-decorative auth__barre-decorative--verticale-droite"></div>
+        </div>
+    </div>
 
-        {% if error %}
-            <div class="alert alert-error">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-        {% endif %}
+    <div class="auth__panneau-formulaire">
+        <div class="auth__carte">
+            <header class="auth__entete">
+                <h1 class="auth__titre">Connexion</h1>
+                <p class="auth__sous-titre">Accédez à votre espace de classement</p>
+            </header>
 
-        <form method="POST" action="{{ path('login') }}" class="auth-form">
-            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" />
+            {% if error %}
+                <div class="auth__alerte auth__alerte--erreur">
+                    {{ error.messageKey|trans(error.messageData, 'security') }}
+                </div>
+            {% endif %}
 
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input 
-                    type="email" 
-                    id="email" 
-                    name="_username" 
-                    value="{{ last_username }}" 
-                    required 
-                    autofocus 
-                />
-            </div>
+            <form method="POST" action="{{ path('login') }}" class="auth__formulaire">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" />
 
-            <div class="form-group">
-                <label for="password">Mot de passe</label>
-                <input type="password" id="password" name="_password" required />
-            </div>
+                <div class="auth__groupe">
+                    <label for="email" class="auth__label">Adresse email</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="_username" 
+                        value="{{ last_username }}" 
+                        required 
+                        autofocus 
+                        class="auth__champ"
+                        placeholder="votre@email.com"
+                    />
+                </div>
 
-            <button type="submit" class="btn-primary">Se connecter</button>
-        </form>
+                <div class="auth__groupe">
+                    <label for="password" class="auth__label">Mot de passe</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="_password" 
+                        required 
+                        class="auth__champ"
+                        placeholder="••••••••"
+                    />
+                </div>
 
-        <p class="auth-link">
-            Pas encore de compte ? <a href="{{ path('register') }}">S'inscrire</a>
-        </p>
+                <button type="submit" class="auth__bouton-soumettre">
+                    Se connecter
+                </button>
+            </form>
+
+            <p class="auth__lien-redirection">
+                Pas encore de compte ? <a href="{{ path('register') }}">Créer un compte</a>
+            </p>
+        </div>
     </div>
 </div>
 {% endblock %}
-

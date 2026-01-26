@@ -1,71 +1,99 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Tier List{% endblock %}
+{% block title %}Ma Tier List - TierList{% endblock %}
 
 {% block body %}
-<div class="tier-list-container">
-    <nav class="tier-list-nav">
-        <span class="nav-brand">TierList</span>
-        <div class="nav-links">
-            <a href="{{ path('profile_index') }}" class="nav-link">Mon Profil</a>
-            <a href="{{ path('logout') }}" class="nav-link nav-logout">Déconnexion</a>
-        </div>
-    </nav>
+<div class="tierlist">
+    <div class="tierlist__conteneur">
+        <nav class="tierlist__navigation">
+            <span class="tierlist__marque">TierList</span>
+            <div class="tierlist__liens-nav">
+                <a href="{{ path('profile_index') }}" class="tierlist__lien-nav">
+                    Mon Profil
+                </a>
+                <a href="{{ path('logout') }}" class="tierlist__lien-nav tierlist__lien-nav--deconnexion">
+                    Déconnexion
+                </a>
+            </div>
+        </nav>
 
-    <div class="tier-list-header">
-        <h1>Tier List</h1>
-        <div class="header-actions">
+        <header class="tierlist__entete">
+            <div class="tierlist__titre-section">
+                <h1 class="tierlist__titre">Ma Tier List</h1>
+                <p class="tierlist__description">Classez vos logos préférés de S (meilleur) à D (à améliorer)</p>
+            </div>
+            <div class="tierlist__actions">
+                {% if not isPremium %}
+                    <a href="{{ path('payment_subscribe') }}" class="tierlist__bouton-premium">
+                        Passer Premium
+                    </a>
+                {% endif %}
+                <a href="{{ path('tier_list_export') }}" class="tierlist__bouton-export">
+                    Exporter PDF
+                </a>
+            </div>
+        </header>
+
+        {% for message in app.flashes('success') %}
+            <div class="tierlist__alerte tierlist__alerte--succes">{{ message }}</div>
+        {% endfor %}
+
+        {% for message in app.flashes('error') %}
+            <div class="tierlist__alerte tierlist__alerte--erreur">{{ message }}</div>
+        {% endfor %}
+
+        {% if isPremium %}
+            <div class="tierlist__indication-drag">
+                Glissez-déposez les logos pour les classer dans les différentes catégories
+            </div>
+        {% endif %}
+
+        <div class="tierlist__grille">
+            {% for tier, tierLabel in {
+                'S': 'Chefs-d\'œuvre',
+                'A': 'Excellents',
+                'B': 'Bons',
+                'C': 'Moyens',
+                'D': 'À améliorer'
+            } %}
+            <div class="tierlist__rangee tierlist__rangee--tier-{{ tier|lower }}" data-tier="{{ tier }}">
+                <div class="tierlist__etiquette-tier">{{ tier }}</div>
+                <div class="tierlist__zone-logos" data-drop-zone="{{ tier }}">
+                    {% for logo in logosByCategory[tier] %}
+                        <div class="logo-carte" data-logo-id="{{ logo.id }}">
+                            <img src="{{ logo.url }}" alt="{{ logo.name }}" class="logo-carte__image" />
+                            <span class="logo-carte__nom">{{ logo.name }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <section class="tierlist__banque" data-tier="bank">
+            <header class="tierlist__banque-entete">
+                <h2 class="tierlist__banque-titre">Banque de logos</h2>
+                <span class="tierlist__banque-compteur">{{ unclassifiedLogos|length }} logos</span>
+            </header>
+            
             {% if not isPremium %}
-                <a href="{{ path('payment_subscribe') }}" class="btn-unlock">Débloquer la Tier List</a>
+                <div class="tierlist__notice-premium">
+                    <a href="{{ path('payment_subscribe') }}">Passez Premium</a> pour classer vos logos par glisser-déposer
+                </div>
             {% endif %}
-            <a href="{{ path('tier_list_export') }}" class="btn-export-pdf">Exporter en PDF</a>
-        </div>
-    </div>
-
-    {% for message in app.flashes('success') %}
-        <div class="alert alert-success">{{ message }}</div>
-    {% endfor %}
-
-    {% for message in app.flashes('error') %}
-        <div class="alert alert-error">{{ message }}</div>
-    {% endfor %}
-
-    {% if isPremium %}
-        <p class="drag-hint">Glissez-déposez les logos pour les classer</p>
-    {% endif %}
-
-    <div class="tier-list-grid">
-        {% for tier, tierLabel in {'S': 'Chefs-d\'œuvre', 'A': 'Excellents', 'B': 'Bons', 'C': 'Moyens', 'D': 'À améliorer'} %}
-        <div class="tier-row tier-{{ tier|lower }}" data-tier="{{ tier }}">
-            <div class="tier-label">{{ tier }}</div>
-            <div class="tier-logos">
-                {% for logo in logosByCategory[tier] %}
-                    <div class="logo-item" data-logo-id="{{ logo.id }}">
-                        <img src="{{ logo.url }}" alt="{{ logo.name }}" />
-                        <span class="logo-name">{{ logo.name }}</span>
+            
+            <div class="tierlist__banque-grille" data-drop-zone="bank">
+                {% for logo in unclassifiedLogos %}
+                    <div class="logo-carte" data-logo-id="{{ logo.id }}">
+                        <img src="{{ logo.url }}" alt="{{ logo.name }}" class="logo-carte__image" />
+                        <span class="logo-carte__nom">{{ logo.name }}</span>
                     </div>
                 {% endfor %}
             </div>
-        </div>
-        {% endfor %}
+        </section>
     </div>
-
-    <div class="logo-bank" data-tier="bank">
-        <h2>Banque de logos</h2>
-        {% if not isPremium %}
-            <p class="premium-notice">
-                <a href="{{ path('payment_subscribe') }}">Passez Premium</a> pour classer vos logos
-            </p>
-        {% endif %}
-        <div class="logo-bank-grid">
-            {% for logo in unclassifiedLogos %}
-                <div class="logo-item" data-logo-id="{{ logo.id }}">
-                    <img src="{{ logo.url }}" alt="{{ logo.name }}" />
-                    <span class="logo-name">{{ logo.name }}</span>
-                </div>
-            {% endfor %}
-        </div>
-    </div>
+    
+    <div class="notification-drag" id="notification-drag"></div>
 </div>
 {% endblock %}
 
@@ -77,7 +105,16 @@
             new TierListDragDrop({
                 csrfToken: '{{ csrf_token('tier_list_move') }}',
                 moveUrl: '{{ path('tier_list_move') }}',
-                isPremium: {{ isPremium ? 'true' : 'false' }}
+                isPremium: {{ isPremium ? 'true' : 'false' }},
+                logoSelector: '.logo-carte',
+                dropZoneSelector: '[data-drop-zone]',
+                draggingClass: 'logo-carte--en-deplacement',
+                activeZoneClass: 'tierlist__zone-logos--actif',
+                activeBankClass: 'tierlist__banque-grille--actif',
+                notificationElement: '#notification-drag',
+                notificationVisibleClass: 'notification-drag--visible',
+                notificationSuccessClass: 'notification-drag--succes',
+                notificationErrorClass: 'notification-drag--erreur'
             });
         });
     </script>

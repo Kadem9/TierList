@@ -1,115 +1,153 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Mon Profil{% endblock %}
+{% block title %}Mon Profil - TierList{% endblock %}
 
 {% block body %}
-<div class="profile-container">
-    <nav class="profile-nav">
-        <a href="{{ path('tier_list_index') }}" class="nav-back">
-            <span class="arrow">←</span> Retour à la Tier List
-        </a>
-        <a href="{{ path('logout') }}" class="nav-logout">Déconnexion</a>
-    </nav>
+<div class="profil">
+    <div class="profil__conteneur">
+        <nav class="profil__navigation">
+            <a href="{{ path('tier_list_index') }}" class="profil__lien-retour">
+                <span class="profil__icone-retour">←</span>
+                Retour à la Tier List
+            </a>
+            <a href="{{ path('logout') }}" class="profil__lien-deconnexion">
+                Déconnexion
+            </a>
+        </nav>
 
-    <header class="profile-header">
-        <div class="avatar">
-            <span>{{ user.email|slice(0, 1)|upper }}</span>
+        <header class="profil__entete">
+            <div class="profil__avatar">
+                <span class="profil__avatar-lettre">{{ user.email|slice(0, 1)|upper }}</span>
+            </div>
+            <div class="profil__info-utilisateur">
+                <h1 class="profil__titre">Mon Profil</h1>
+                <p class="profil__email">{{ user.email }}</p>
+            </div>
+        </header>
+
+        {% for message in app.flashes('success') %}
+            <div class="profil__alerte profil__alerte--succes">{{ message }}</div>
+        {% endfor %}
+
+        {% for message in app.flashes('error') %}
+            <div class="profil__alerte profil__alerte--erreur">{{ message }}</div>
+        {% endfor %}
+
+        <div class="profil__grille">
+            <section class="profil__carte">
+                <h2 class="profil__carte-titre">Abonnement</h2>
+                <div class="profil__statut-abonnement">
+                    {% if user.isPremium %}
+                        <span class="profil__badge-abonnement profil__badge-abonnement--premium">
+                            Premium
+                        </span>
+                        <p class="profil__description-abonnement">
+                            Vous avez accès à toutes les fonctionnalités
+                        </p>
+                        <ul class="profil__liste-fonctionnalites">
+                            <li class="profil__fonctionnalite profil__fonctionnalite--actif">Classement des logos</li>
+                            <li class="profil__fonctionnalite profil__fonctionnalite--actif">Export PDF avec statistiques</li>
+                            <li class="profil__fonctionnalite profil__fonctionnalite--actif">Glisser-déposer</li>
+                        </ul>
+                    {% else %}
+                        <span class="profil__badge-abonnement profil__badge-abonnement--gratuit">
+                            Gratuit
+                        </span>
+                        <p class="profil__description-abonnement">
+                            Passez Premium pour débloquer toutes les fonctionnalités
+                        </p>
+                        <ul class="profil__liste-fonctionnalites">
+                            <li class="profil__fonctionnalite profil__fonctionnalite--inactif">Classement des logos</li>
+                            <li class="profil__fonctionnalite profil__fonctionnalite--inactif">Export PDF avec statistiques</li>
+                            <li class="profil__fonctionnalite profil__fonctionnalite--inactif">Glisser-déposer</li>
+                        </ul>
+                        <a href="{{ path('payment_subscribe') }}" class="profil__bouton-premium">
+                            Passer Premium — 9,99 €
+                        </a>
+                    {% endif %}
+                </div>
+            </section>
+
+            <section class="profil__carte">
+                <h2 class="profil__carte-titre">Statistiques</h2>
+                <div class="profil__grille-stats">
+                    <div class="profil__stat">
+                        <span class="profil__stat-valeur">{{ stats.totalLogosClassified }}</span>
+                        <span class="profil__stat-label">Logos classés</span>
+                    </div>
+                    <div class="profil__stat">
+                        <span class="profil__stat-valeur">{{ user.isPremium ? 'Oui' : 'Non' }}</span>
+                        <span class="profil__stat-label">Premium</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="profil__carte profil__carte--large">
+                <h2 class="profil__carte-titre">Sécurité</h2>
+                <form method="POST" action="{{ path('profile_change_password') }}" class="profil__formulaire-securite">
+                    <input type="hidden" name="_token" value="{{ csrf_token('change_password') }}" />
+                    
+                    <div class="profil__groupe-champ">
+                        <label for="current_password" class="profil__label">Mot de passe actuel</label>
+                        <input 
+                            type="password" 
+                            id="current_password" 
+                            name="current_password" 
+                            required 
+                            placeholder="••••••••" 
+                            autocomplete="current-password"
+                            class="profil__champ"
+                        />
+                    </div>
+
+                    <div class="profil__groupe-champ">
+                        <label for="new_password" class="profil__label">Nouveau mot de passe</label>
+                        <input 
+                            type="password" 
+                            id="new_password" 
+                            name="new_password" 
+                            required 
+                            placeholder="••••••••" 
+                            minlength="6" 
+                            autocomplete="new-password"
+                            class="profil__champ"
+                        />
+                    </div>
+
+                    <div class="profil__groupe-champ">
+                        <label for="confirm_password" class="profil__label">Confirmer</label>
+                        <input 
+                            type="password" 
+                            id="confirm_password" 
+                            name="confirm_password" 
+                            required 
+                            placeholder="••••••••" 
+                            minlength="6" 
+                            autocomplete="new-password"
+                            class="profil__champ"
+                        />
+                    </div>
+
+                    <button type="submit" class="profil__bouton-securite">
+                        Modifier
+                    </button>
+                </form>
+            </section>
+
+            <section class="profil__carte">
+                <h2 class="profil__carte-titre">Informations</h2>
+                <div class="profil__liste-infos">
+                    <div class="profil__info-item">
+                        <span class="profil__info-label">Email</span>
+                        <span class="profil__info-valeur">{{ user.email }}</span>
+                    </div>
+                    <div class="profil__info-item">
+                        <span class="profil__info-label">ID utilisateur</span>
+                        <span class="profil__info-valeur profil__info-valeur--id">{{ user.id|slice(0, 8) }}...</span>
+                    </div>
+                </div>
+            </section>
         </div>
-        <div class="header-info">
-            <h1>Mon Profil</h1>
-            <p class="email">{{ user.email }}</p>
-        </div>
-    </header>
-
-    {% for message in app.flashes('success') %}
-        <div class="alert alert-success">{{ message }}</div>
-    {% endfor %}
-
-    {% for message in app.flashes('error') %}
-        <div class="alert alert-error">{{ message }}</div>
-    {% endfor %}
-
-    <div class="profile-grid">
-        <section class="profile-card subscription-card">
-            <h2>Abonnement</h2>
-            <div class="subscription-status">
-                {% if user.isPremium %}
-                    <span class="badge badge-premium">Premium</span>
-                    <p>Vous avez accès à toutes les fonctionnalités</p>
-                    <ul class="features-list">
-                        <li class="active">Classement des logos</li>
-                        <li class="active">Export PDF avec statistiques</li>
-                        <li class="active">Drag & Drop</li>
-                    </ul>
-                {% else %}
-                    <span class="badge badge-free">Gratuit</span>
-                    <p>Passez Premium pour débloquer toutes les fonctionnalités</p>
-                    <ul class="features-list">
-                        <li class="inactive">Classement des logos</li>
-                        <li class="inactive">Export PDF avec statistiques</li>
-                        <li class="inactive">Drag & Drop</li>
-                    </ul>
-                    <a href="{{ path('payment_subscribe') }}" class="btn btn-premium">
-                        Passer Premium - 9,99 €
-                    </a>
-                {% endif %}
-            </div>
-        </section>
-
-        <section class="profile-card stats-card">
-            <h2>Statistiques</h2>
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <span class="stat-value">{{ stats.totalLogosClassified }}</span>
-                    <span class="stat-label">Logos classés</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-value">{{ user.isPremium ? 'Oui' : 'Non' }}</span>
-                    <span class="stat-label">Premium</span>
-                </div>
-            </div>
-        </section>
-
-        <section class="profile-card security-card">
-            <h2>Sécurité</h2>
-            <form method="POST" action="{{ path('profile_change_password') }}" class="password-form">
-                <input type="hidden" name="_token" value="{{ csrf_token('change_password') }}" />
-                
-                <div class="form-group">
-                    <label for="current_password">Mot de passe actuel</label>
-                    <input type="password" id="current_password" name="current_password" required 
-                           placeholder="••••••••" autocomplete="current-password" />
-                </div>
-
-                <div class="form-group">
-                    <label for="new_password">Nouveau mot de passe</label>
-                    <input type="password" id="new_password" name="new_password" required 
-                           placeholder="••••••••" minlength="6" autocomplete="new-password" />
-                </div>
-
-                <div class="form-group">
-                    <label for="confirm_password">Confirmer le mot de passe</label>
-                    <input type="password" id="confirm_password" name="confirm_password" required 
-                           placeholder="••••••••" minlength="6" autocomplete="new-password" />
-                </div>
-
-                <button type="submit" class="btn btn-primary">Modifier le mot de passe</button>
-            </form>
-        </section>
-
-        <section class="profile-card account-card">
-            <h2>Informations du compte</h2>
-            <div class="info-list">
-                <div class="info-item">
-                    <span class="info-label">Email</span>
-                    <span class="info-value">{{ user.email }}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">ID utilisateur</span>
-                    <span class="info-value id-value">{{ user.id|slice(0, 8) }}...</span>
-                </div>
-            </div>
-        </section>
     </div>
 </div>
 {% endblock %}

@@ -1,144 +1,194 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Tier List Export</title>
+    <title>Tier List - Export PDF</title>
     <style>
         * {
             box-sizing: border-box;
-        }
-        body {
-            font-family: Arial, sans-serif;
             margin: 0;
-            padding: 20px;
-            font-size: 12px;
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 10px;
-        }
-        .page-break {
-            page-break-after: always;
+            padding: 0;
         }
 
-        /* Stats Page */
-        .stats-page {
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 11px;
+            line-height: 1.5;
+            color: #1a1a1d;
+            background-color: #ffffff;
+            padding: 24px;
+        }
+
+        h1 {
+            font-family: Georgia, 'Times New Roman', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: #0a0a0b;
+            text-align: center;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        h2 {
+            font-family: Georgia, 'Times New Roman', serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+            margin: 0 0 12px 0;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .page-stats {
             padding: 20px 0;
         }
-        .stats-header {
+
+        .page-stats__entete {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 32px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #f0f0f0;
         }
-        .stats-header h1 {
-            color: #667eea;
-            margin-bottom: 5px;
+
+        .page-stats__titre {
+            color: #ff3d3d;
+            margin-bottom: 4px;
         }
-        .stats-header p {
-            color: #666;
+
+        .page-stats__sous-titre {
+            font-size: 12px;
+            color: #6b6b70;
             margin: 0;
         }
-        .stats-table {
+
+        .tableau-stats {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 16px;
         }
-        .stats-table th,
-        .stats-table td {
+
+        .tableau-stats th,
+        .tableau-stats td {
             padding: 10px 8px;
             text-align: center;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #e5e5e5;
         }
-        .stats-table th {
-            background-color: #f8f9fa;
-            font-weight: bold;
-            color: #333;
+
+        .tableau-stats th {
+            background-color: #f8f8f8;
+            font-weight: 600;
+            color: #1a1a1d;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        .stats-table tr:hover {
-            background-color: #f5f5f5;
+
+        .tableau-stats tr:hover {
+            background-color: #fafafa;
         }
-        .logo-cell {
+
+        .tableau-stats__cellule-logo {
             text-align: left;
             font-weight: 500;
         }
-        .percent-bar {
+
+        .barre-pourcentage {
             display: inline-block;
             height: 8px;
             border-radius: 4px;
-            margin-right: 5px;
+            margin-right: 4px;
             vertical-align: middle;
         }
-        .cat-s { background-color: #ff6b6b; }
-        .cat-a { background-color: #4ecdc4; }
-        .cat-b { background-color: #45b7d1; }
-        .cat-c { background-color: #f9ca24; }
-        .cat-d { background-color: #95a5a6; }
-        .dominant {
-            font-weight: bold;
-            padding: 2px 8px;
-            border-radius: 4px;
-            color: white;
-        }
-        .dominant-s { background-color: #ff6b6b; }
-        .dominant-a { background-color: #4ecdc4; }
-        .dominant-b { background-color: #45b7d1; }
-        .dominant-c { background-color: #f9ca24; color: #333; }
-        .dominant-d { background-color: #95a5a6; }
 
-        /* Tier List Page */
-        .tier-category {
+        .barre-pourcentage--tier-s { background-color: #ff3d3d; }
+        .barre-pourcentage--tier-a { background-color: #ff9f3d; }
+        .barre-pourcentage--tier-b { background-color: #ffd93d; }
+        .barre-pourcentage--tier-c { background-color: #3dffb8; }
+        .barre-pourcentage--tier-d { background-color: #3d9dff; }
+
+        .badge-dominant {
+            display: inline-block;
+            font-weight: 700;
+            font-size: 10px;
+            padding: 3px 10px;
+            border-radius: 12px;
+            color: #ffffff;
+        }
+
+        .badge-dominant--tier-s { background-color: #ff3d3d; }
+        .badge-dominant--tier-a { background-color: #ff9f3d; color: #1a1a1d; }
+        .badge-dominant--tier-b { background-color: #ffd93d; color: #1a1a1d; }
+        .badge-dominant--tier-c { background-color: #3dffb8; color: #1a1a1d; }
+        .badge-dominant--tier-d { background-color: #3d9dff; }
+
+        .saut-de-page {
+            page-break-after: always;
+        }
+
+        .page-tierlist__entete {
+            margin-top: 24px;
             margin-bottom: 20px;
-            padding: 15px;
+            text-align: center;
+        }
+
+        .page-tierlist__titre {
+            color: #0a0a0b;
+        }
+
+        .categorie-tier {
+            margin-bottom: 16px;
+            padding: 16px;
             border-radius: 8px;
             page-break-inside: avoid;
         }
-        .tier-category.tier-s { background-color: #ff6b6b; }
-        .tier-category.tier-a { background-color: #4ecdc4; }
-        .tier-category.tier-b { background-color: #45b7d1; }
-        .tier-category.tier-c { background-color: #f9ca24; }
-        .tier-category.tier-d { background-color: #95a5a6; }
-        .tier-category h2 {
-            margin: 0 0 10px 0;
-            color: white;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-            font-size: 16px;
-        }
-        .tier-logos {
+
+        .categorie-tier--tier-s { background-color: #ff3d3d; }
+        .categorie-tier--tier-a { background-color: #ff9f3d; }
+        .categorie-tier--tier-a h2 { color: #1a1a1d; }
+        .categorie-tier--tier-b { background-color: #ffd93d; }
+        .categorie-tier--tier-b h2 { color: #1a1a1d; }
+        .categorie-tier--tier-c { background-color: #3dffb8; }
+        .categorie-tier--tier-c h2 { color: #1a1a1d; }
+        .categorie-tier--tier-d { background-color: #3d9dff; }
+
+        .grille-logos {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
         }
-        .logo-item {
-            background: white;
-            padding: 8px;
-            border-radius: 4px;
+
+        .carte-logo {
+            background: #ffffff;
+            padding: 10px;
+            border-radius: 6px;
             text-align: center;
             width: 100px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-        .logo-item img {
+
+        .carte-logo__image {
             max-width: 80px;
             height: 60px;
             object-fit: contain;
         }
-        .logo-item p {
-            margin: 5px 0 0 0;
+
+        .carte-logo__nom {
+            display: block;
+            margin-top: 6px;
             font-size: 10px;
             font-weight: 500;
-        }
-        .your-tierlist-header {
-            margin-top: 30px;
+            color: #1a1a1d;
         }
     </style>
 </head>
 <body>
     {% if globalStats is not empty %}
-    <div class="stats-page">
-        <div class="stats-header">
-            <h1>Statistiques Globales</h1>
-            <p>Classement moyen de tous les utilisateurs</p>
-        </div>
+    <div class="page-stats">
+        <header class="page-stats__entete">
+            <h1 class="page-stats__titre">Statistiques Globales</h1>
+            <p class="page-stats__sous-titre">Classement moyen de tous les utilisateurs</p>
+        </header>
 
-        <table class="stats-table">
+        <table class="tableau-stats">
             <thead>
                 <tr>
                     <th style="text-align: left;">Logo</th>
@@ -154,39 +204,39 @@
             <tbody>
                 {% for stat in globalStats %}
                 <tr>
-                    <td class="logo-cell">{{ stat.logo.name }}</td>
+                    <td class="tableau-stats__cellule-logo">{{ stat.logo.name }}</td>
                     <td>
                         {% if stat.percentages.S > 0 %}
-                        <span class="percent-bar cat-s" style="width: {{ stat.percentages.S }}px;"></span>
+                        <span class="barre-pourcentage barre-pourcentage--tier-s" style="width: {{ stat.percentages.S }}px;"></span>
                         {{ stat.percentages.S }}%
                         {% else %}-{% endif %}
                     </td>
                     <td>
                         {% if stat.percentages.A > 0 %}
-                        <span class="percent-bar cat-a" style="width: {{ stat.percentages.A }}px;"></span>
+                        <span class="barre-pourcentage barre-pourcentage--tier-a" style="width: {{ stat.percentages.A }}px;"></span>
                         {{ stat.percentages.A }}%
                         {% else %}-{% endif %}
                     </td>
                     <td>
                         {% if stat.percentages.B > 0 %}
-                        <span class="percent-bar cat-b" style="width: {{ stat.percentages.B }}px;"></span>
+                        <span class="barre-pourcentage barre-pourcentage--tier-b" style="width: {{ stat.percentages.B }}px;"></span>
                         {{ stat.percentages.B }}%
                         {% else %}-{% endif %}
                     </td>
                     <td>
                         {% if stat.percentages.C > 0 %}
-                        <span class="percent-bar cat-c" style="width: {{ stat.percentages.C }}px;"></span>
+                        <span class="barre-pourcentage barre-pourcentage--tier-c" style="width: {{ stat.percentages.C }}px;"></span>
                         {{ stat.percentages.C }}%
                         {% else %}-{% endif %}
                     </td>
                     <td>
                         {% if stat.percentages.D > 0 %}
-                        <span class="percent-bar cat-d" style="width: {{ stat.percentages.D }}px;"></span>
+                        <span class="barre-pourcentage barre-pourcentage--tier-d" style="width: {{ stat.percentages.D }}px;"></span>
                         {{ stat.percentages.D }}%
                         {% else %}-{% endif %}
                     </td>
                     <td>
-                        <span class="dominant dominant-{{ stat.dominantCategory|lower }}">
+                        <span class="badge-dominant badge-dominant--tier-{{ stat.dominantCategory|lower }}">
                             {{ stat.dominantCategory }} ({{ stat.dominantPercent }}%)
                         </span>
                     </td>
@@ -197,32 +247,32 @@
         </table>
     </div>
 
-    <div class="page-break"></div>
+    <div class="saut-de-page"></div>
     {% endif %}
 
-    <div class="your-tierlist-header">
-        <h1>Ma Tier List</h1>
-    </div>
+    <header class="page-tierlist__entete">
+        <h1 class="page-tierlist__titre">Ma Tier List</h1>
+    </header>
 
     {% for tier, tierData in {
-        'S': {'label': 'S - Les chefs-d\'œuvre du branding', 'class': 'tier-s'},
-        'A': {'label': 'A - Excellents logos', 'class': 'tier-a'},
-        'B': {'label': 'B - Bons logos', 'class': 'tier-b'},
-        'C': {'label': 'C - Logos moyens', 'class': 'tier-c'},
-        'D': {'label': 'D - Logos à améliorer', 'class': 'tier-d'}
+        'S': {'label': 'S — Les chefs-d\'œuvre du branding', 'class': 'categorie-tier--tier-s'},
+        'A': {'label': 'A — Excellents logos', 'class': 'categorie-tier--tier-a'},
+        'B': {'label': 'B — Bons logos', 'class': 'categorie-tier--tier-b'},
+        'C': {'label': 'C — Logos moyens', 'class': 'categorie-tier--tier-c'},
+        'D': {'label': 'D — Logos à améliorer', 'class': 'categorie-tier--tier-d'}
     } %}
         {% if logosByCategory[tier] is not empty %}
-        <div class="tier-category {{ tierData.class }}">
+        <section class="categorie-tier {{ tierData.class }}">
             <h2>{{ tierData.label }}</h2>
-            <div class="tier-logos">
+            <div class="grille-logos">
                 {% for logo in logosByCategory[tier] %}
-                <div class="logo-item">
-                    <img src="{{ logo.url }}" alt="{{ logo.name }}" />
-                    <p>{{ logo.name }}</p>
-                </div>
+                <article class="carte-logo">
+                    <img src="{{ logo.url }}" alt="{{ logo.name }}" class="carte-logo__image" />
+                    <span class="carte-logo__nom">{{ logo.name }}</span>
+                </article>
                 {% endfor %}
             </div>
-        </div>
+        </section>
         {% endif %}
     {% endfor %}
 </body>

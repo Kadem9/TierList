@@ -1,38 +1,73 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Inscription{% endblock %}
+{% block title %}Inscription - TierList{% endblock %}
 
 {% block body %}
-<div class="auth-container">
-    <div class="auth-card">
-        <h1>Inscription</h1>
+<div class="auth">
+    <div class="auth__panneau-decoratif">
+        <div class="auth__marque">
+            <div class="auth__logo">TierList</div>
+            <div class="auth__slogan">Classez • Comparez • Partagez</div>
+        </div>
+        <div class="auth__decorations">
+            <div class="auth__barre-decorative auth__barre-decorative--horizontale-haut"></div>
+            <div class="auth__barre-decorative auth__barre-decorative--horizontale-bas"></div>
+            <div class="auth__barre-decorative auth__barre-decorative--verticale-gauche"></div>
+            <div class="auth__barre-decorative auth__barre-decorative--verticale-droite"></div>
+        </div>
+    </div>
 
-        {% for message in app.flashes('success') %}
-            <div class="alert alert-success">{{ message }}</div>
-        {% endfor %}
+    <div class="auth__panneau-formulaire">
+        <div class="auth__carte">
+            <header class="auth__entete">
+                <h1 class="auth__titre">Inscription</h1>
+                <p class="auth__sous-titre">Créez votre compte et commencez à classer</p>
+            </header>
 
-        {% for message in app.flashes('error') %}
-            <div class="alert alert-error">{{ message }}</div>
-        {% endfor %}
+            {% for message in app.flashes('success') %}
+                <div class="auth__alerte auth__alerte--succes">{{ message }}</div>
+            {% endfor %}
 
-        <form method="POST" action="{{ path('register') }}" class="auth-form">
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" required autofocus />
-            </div>
+            {% for message in app.flashes('error') %}
+                <div class="auth__alerte auth__alerte--erreur">{{ message }}</div>
+            {% endfor %}
 
-            <div class="form-group">
-                <label for="password">Mot de passe</label>
-                <input type="password" id="password" name="password" required />
-            </div>
+            <form method="POST" action="{{ path('register') }}" class="auth__formulaire">
+                <div class="auth__groupe">
+                    <label for="email" class="auth__label">Adresse email</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        required 
+                        autofocus 
+                        class="auth__champ"
+                        placeholder="votre@email.com"
+                    />
+                </div>
 
-            <button type="submit" class="btn-primary">S'inscrire</button>
-        </form>
+                <div class="auth__groupe">
+                    <label for="password" class="auth__label">Mot de passe</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        required 
+                        class="auth__champ"
+                        placeholder="••••••••"
+                        minlength="6"
+                    />
+                </div>
 
-        <p class="auth-link">
-            Déjà un compte ? <a href="{{ path('login') }}">Se connecter</a>
-        </p>
+                <button type="submit" class="auth__bouton-soumettre">
+                    Créer mon compte
+                </button>
+            </form>
+
+            <p class="auth__lien-redirection">
+                Déjà inscrit ? <a href="{{ path('login') }}">Se connecter</a>
+            </p>
+        </div>
     </div>
 </div>
 {% endblock %}
-

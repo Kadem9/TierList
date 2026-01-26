@@ -1,10 +1,321 @@
 @import 'variables';
-@import 'tierlist';
-@import 'auth';
-@import 'profile';
 
-body {
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap');
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  padding: 0;
 }
 
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: $police-corps;
+  font-size: $taille-texte-base;
+  font-weight: $graisse-normale;
+  line-height: $interligne-normal;
+  color: $couleur-texte-secondaire;
+  background-color: $couleur-fond-primaire;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: $police-titre;
+  font-weight: $graisse-gras;
+  color: $couleur-texte-primaire;
+  line-height: $interligne-compact;
+  letter-spacing: $espacement-lettres-serre;
+}
+
+h1 {
+  font-size: $taille-texte-3xl;
+  @media (max-width: $breakpoint-tablette) { font-size: $taille-texte-2xl; }
+}
+
+h2 {
+  font-size: $taille-texte-2xl;
+  @media (max-width: $breakpoint-tablette) { font-size: $taille-texte-xl; }
+}
+
+h3 { font-size: $taille-texte-xl; }
+h4 { font-size: $taille-texte-lg; }
+h5 { font-size: $taille-texte-md; }
+h6 { font-size: $taille-texte-base; }
+
+p {
+  margin-bottom: $espace-md;
+  &:last-child { margin-bottom: 0; }
+}
+
+a {
+  color: $couleur-accent-tertiaire;
+  text-decoration: none;
+  transition: $transition-couleur;
+  &:hover { color: lighten($couleur-accent-tertiaire, 15%); }
+  &:focus-visible {
+    outline: 2px solid $couleur-accent-tertiaire;
+    outline-offset: 2px;
+    border-radius: $rayon-xs;
+  }
+}
+
+strong, b {
+  font-weight: $graisse-semi-gras;
+  color: $couleur-texte-primaire;
+}
+
+em, i { font-style: italic; }
+
+code {
+  font-family: $police-mono;
+  font-size: 0.875em;
+  padding: $espace-2xs $espace-xs;
+  background-color: $couleur-fond-tertiaire;
+  border-radius: $rayon-xs;
+  color: $couleur-accent-secondaire;
+}
+
+ul, ol {
+  padding-left: $espace-lg;
+  margin-bottom: $espace-md;
+}
+
+li { margin-bottom: $espace-xs; }
+
+input,
+textarea,
+select,
+button {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="tel"],
+input[type="url"],
+input[type="search"],
+textarea,
+select {
+  width: 100%;
+  height: $hauteur-input;
+  padding: $espace-sm $espace-md;
+  background-color: $couleur-fond-tertiaire;
+  border: 1px solid $couleur-bordure;
+  border-radius: $rayon-md;
+  color: $couleur-texte-primaire;
+  transition: $transition-bordure, $transition-ombre;
+  &::placeholder { color: $couleur-texte-tertiaire; }
+  &:hover { border-color: $couleur-bordure-active; }
+  &:focus {
+    outline: none;
+    border-color: $couleur-accent-primaire;
+    box-shadow: 0 0 0 3px rgba($couleur-accent-primaire, 0.15);
+  }
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+textarea {
+  height: auto;
+  min-height: 120px;
+  resize: vertical;
+}
+
+label {
+  display: block;
+  margin-bottom: $espace-xs;
+  font-size: $taille-texte-sm;
+  font-weight: $graisse-medium;
+  color: $couleur-texte-secondaire;
+  text-transform: uppercase;
+  letter-spacing: $espacement-lettres-large;
+}
+
+.conteneur {
+  width: 100%;
+  max-width: $largeur-max-large;
+  margin: 0 auto;
+  padding: 0 $espace-lg;
+  @media (max-width: $breakpoint-tablette) { padding: 0 $espace-md; }
+  &--etroit { max-width: $largeur-max-etroite; }
+  &--moyen { max-width: $largeur-max-moyenne; }
+  &--large { max-width: $largeur-max-large; }
+  &--tres-large { max-width: $largeur-max-tres-large; }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.alerte {
+  display: flex;
+  align-items: center;
+  gap: $espace-sm;
+  padding: $espace-md $espace-lg;
+  margin-bottom: $espace-lg;
+  border-radius: $rayon-md;
+  font-size: $taille-texte-sm;
+  font-weight: $graisse-medium;
+  border: 1px solid;
+  &--succes {
+    background-color: rgba($couleur-succes, 0.1);
+    border-color: rgba($couleur-succes, 0.3);
+    color: $couleur-succes;
+  }
+  &--erreur {
+    background-color: rgba($couleur-erreur, 0.1);
+    border-color: rgba($couleur-erreur, 0.3);
+    color: $couleur-erreur;
+  }
+  &--attention {
+    background-color: rgba($couleur-attention, 0.1);
+    border-color: rgba($couleur-attention, 0.3);
+    color: $couleur-attention;
+  }
+  &--info {
+    background-color: rgba($couleur-info, 0.1);
+    border-color: rgba($couleur-info, 0.3);
+    color: $couleur-info;
+  }
+}
+
+.bouton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $espace-xs;
+  height: $hauteur-bouton;
+  padding: 0 $espace-xl;
+  font-family: $police-corps;
+  font-size: $taille-texte-sm;
+  font-weight: $graisse-semi-gras;
+  text-transform: uppercase;
+  letter-spacing: $espacement-lettres-large;
+  text-decoration: none;
+  border: none;
+  border-radius: $rayon-sm;
+  cursor: pointer;
+  transition: $transition-tout;
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  &--primaire {
+    background-color: $couleur-accent-primaire;
+    color: $couleur-texte-primaire;
+    &:hover:not(:disabled) {
+      background-color: lighten($couleur-accent-primaire, 8%);
+      transform: translateY(-2px);
+      box-shadow: $ombre-moyenne, $lueur-accent;
+    }
+    &:active:not(:disabled) { transform: translateY(0); }
+  }
+  &--secondaire {
+    background-color: $couleur-fond-tertiaire;
+    color: $couleur-texte-primaire;
+    border: 1px solid $couleur-bordure;
+    &:hover:not(:disabled) {
+      background-color: $couleur-fond-quaternaire;
+      border-color: $couleur-bordure-active;
+    }
+  }
+  &--ghost {
+    background-color: transparent;
+    color: $couleur-texte-secondaire;
+    &:hover:not(:disabled) {
+      background-color: $couleur-fond-tertiaire;
+      color: $couleur-texte-primaire;
+    }
+  }
+  &--premium {
+    background: linear-gradient(135deg, $couleur-accent-primaire 0%, $couleur-accent-secondaire 100%);
+    color: $couleur-texte-inverse;
+    font-weight: $graisse-gras;
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: $ombre-grande, 0 0 30px rgba($couleur-accent-secondaire, 0.4);
+    }
+  }
+  &--petit {
+    height: $hauteur-bouton-petit;
+    padding: 0 $espace-md;
+    font-size: $taille-texte-xs;
+  }
+  &--large { width: 100%; }
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: $espace-2xs $espace-sm;
+  font-family: $police-mono;
+  font-size: $taille-texte-xs;
+  font-weight: $graisse-gras;
+  text-transform: uppercase;
+  letter-spacing: $espacement-lettres-tres-large;
+  border-radius: $rayon-complet;
+  &--premium {
+    background: linear-gradient(135deg, $couleur-accent-primaire 0%, $couleur-accent-secondaire 100%);
+    color: $couleur-texte-inverse;
+  }
+  &--gratuit {
+    background-color: $couleur-fond-tertiaire;
+    color: $couleur-texte-tertiaire;
+    border: 1px solid $couleur-bordure;
+  }
+  &--tier-s { background-color: $couleur-tier-s; color: $couleur-texte-primaire; }
+  &--tier-a { background-color: $couleur-tier-a; color: $couleur-texte-inverse; }
+  &--tier-b { background-color: $couleur-tier-b; color: $couleur-texte-inverse; }
+  &--tier-c { background-color: $couleur-tier-c; color: $couleur-texte-inverse; }
+  &--tier-d { background-color: $couleur-tier-d; color: $couleur-texte-primaire; }
+}
+
+@keyframes fondu-entrant {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulsation {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes rebond {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+@keyframes glissement-droite {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@import 'auth';
+@import 'tierlist';
+@import 'profile';

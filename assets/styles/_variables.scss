@@ -1,6 +1,138 @@
-$tier-s-color: #ff6b6b;
-$tier-a-color: #4ecdc4;
-$tier-b-color: #45b7d1;
-$tier-c-color: #f9ca24;
-$tier-d-color: #95a5a6;
+$couleur-fond-primaire: #0A0A0B;
+$couleur-fond-secondaire: #121214;
+$couleur-fond-tertiaire: #1A1A1D;
+$couleur-fond-quaternaire: #252528;
 
+$couleur-texte-primaire: #FAFAFA;
+$couleur-texte-secondaire: #A1A1A6;
+$couleur-texte-tertiaire: #6B6B70;
+$couleur-texte-inverse: #0A0A0B;
+
+$couleur-accent-primaire: #FF3D3D;
+$couleur-accent-secondaire: #FFD93D;
+$couleur-accent-tertiaire: #3D9DFF;
+
+$couleur-tier-s: #FF3D3D;
+$couleur-tier-a: #FF9F3D;
+$couleur-tier-b: #FFD93D;
+$couleur-tier-c: #3DFFB8;
+$couleur-tier-d: #3D9DFF;
+
+$couleur-tier-s-fond: rgba(255, 61, 61, 0.15);
+$couleur-tier-a-fond: rgba(255, 159, 61, 0.15);
+$couleur-tier-b-fond: rgba(255, 217, 61, 0.15);
+$couleur-tier-c-fond: rgba(61, 255, 184, 0.15);
+$couleur-tier-d-fond: rgba(61, 157, 255, 0.15);
+
+$couleur-succes: #3DFF8F;
+$couleur-erreur: #FF3D5C;
+$couleur-attention: #FFD93D;
+$couleur-info: #3D9DFF;
+
+$couleur-bordure: rgba(255, 255, 255, 0.08);
+$couleur-bordure-active: rgba(255, 255, 255, 0.15);
+$couleur-bordure-accent: $couleur-accent-primaire;
+
+$police-titre: 'Playfair Display', 'Georgia', serif;
+$police-corps: 'DM Sans', 'Helvetica Neue', sans-serif;
+$police-mono: 'Space Mono', 'Consolas', monospace;
+
+$taille-texte-xs: 0.64rem;
+$taille-texte-sm: 0.8rem;
+$taille-texte-base: 1rem;
+$taille-texte-md: 1.25rem;
+$taille-texte-lg: 1.563rem;
+$taille-texte-xl: 1.953rem;
+$taille-texte-2xl: 2.441rem;
+$taille-texte-3xl: 3.052rem;
+$taille-texte-4xl: 3.815rem;
+
+$graisse-legere: 300;
+$graisse-normale: 400;
+$graisse-medium: 500;
+$graisse-semi-gras: 600;
+$graisse-gras: 700;
+$graisse-extra-gras: 800;
+
+$interligne-serre: 1.1;
+$interligne-compact: 1.25;
+$interligne-normal: 1.5;
+$interligne-ample: 1.75;
+
+$espacement-lettres-serre: -0.03em;
+$espacement-lettres-normal: 0;
+$espacement-lettres-large: 0.05em;
+$espacement-lettres-tres-large: 0.15em;
+
+$espace-2xs: 0.25rem;
+$espace-xs: 0.5rem;
+$espace-sm: 0.75rem;
+$espace-md: 1rem;
+$espace-lg: 1.5rem;
+$espace-xl: 2rem;
+$espace-2xl: 3rem;
+$espace-3xl: 4rem;
+$espace-4xl: 6rem;
+
+$rayon-xs: 2px;
+$rayon-sm: 4px;
+$rayon-md: 8px;
+$rayon-lg: 12px;
+$rayon-xl: 16px;
+$rayon-2xl: 24px;
+$rayon-complet: 9999px;
+
+$ombre-subtile: 0 1px 2px rgba(0, 0, 0, 0.4);
+$ombre-petite: 0 2px 8px rgba(0, 0, 0, 0.5);
+$ombre-moyenne: 0 4px 16px rgba(0, 0, 0, 0.5);
+$ombre-grande: 0 8px 32px rgba(0, 0, 0, 0.6);
+$ombre-tres-grande: 0 16px 64px rgba(0, 0, 0, 0.7);
+$ombre-interne: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+
+$lueur-accent: 0 0 20px rgba($couleur-accent-primaire, 0.3);
+$lueur-succes: 0 0 20px rgba($couleur-succes, 0.3);
+$lueur-erreur: 0 0 20px rgba($couleur-erreur, 0.3);
+
+$duree-instantanee: 75ms;
+$duree-rapide: 150ms;
+$duree-normale: 250ms;
+$duree-lente: 400ms;
+$duree-tres-lente: 600ms;
+
+$easing-standard: cubic-bezier(0.4, 0, 0.2, 1);
+$easing-entree: cubic-bezier(0, 0, 0.2, 1);
+$easing-sortie: cubic-bezier(0.4, 0, 1, 1);
+$easing-rebond: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+$transition-couleur: color $duree-rapide $easing-standard;
+$transition-fond: background-color $duree-rapide $easing-standard;
+$transition-bordure: border-color $duree-rapide $easing-standard;
+$transition-ombre: box-shadow $duree-normale $easing-standard;
+$transition-transformation: transform $duree-normale $easing-rebond;
+$transition-opacite: opacity $duree-rapide $easing-standard;
+$transition-tout: all $duree-normale $easing-standard;
+
+$breakpoint-mobile: 480px;
+$breakpoint-tablette: 768px;
+$breakpoint-portable: 1024px;
+$breakpoint-bureau: 1280px;
+$breakpoint-large: 1536px;
+
+$z-base: 0;
+$z-dessus: 10;
+$z-dropdown: 100;
+$z-sticky: 200;
+$z-overlay: 300;
+$z-modal: 400;
+$z-notification: 500;
+$z-tooltip: 600;
+
+$largeur-max-etroite: 480px;
+$largeur-max-moyenne: 768px;
+$largeur-max-large: 1200px;
+$largeur-max-tres-large: 1400px;
+
+$hauteur-input: 48px;
+$hauteur-bouton: 48px;
+$hauteur-bouton-petit: 36px;
+$hauteur-nav: 72px;

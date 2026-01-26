@@ -123,13 +123,9 @@ class TierListController extends AbstractController
         $user = $doctrineUser->toDomain();
 
         try {
-            // Générer le PDF et obtenir le filename
             $filename = $this->exportTierListPdfUseCase->execute($user);
-            
-            // Récupérer le contenu du fichier via PdfStorageInterface (utilise les credentials S3)
             $pdfContent = $this->pdfStorage->getFileContent($filename);
 
-            // Créer une réponse avec le contenu PDF
             $response = new Response($pdfContent);
             $response->headers->set('Content-Type', 'application/pdf');
             $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
