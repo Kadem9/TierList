@@ -4,6 +4,7 @@ namespace App\Infrastructure\Controller\Web;
 
 use App\Application\UseCase\RegisterUserUseCase;
 use App\Domain\Exception\UserAlreadyExistsException;
+use App\Domain\Port\EmailInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,7 +13,8 @@ use Symfony\Component\Routing\Attribute\Route;
 class RegisterController extends AbstractController
 {
     public function __construct(
-        private readonly RegisterUserUseCase $registerUserUseCase
+        private readonly RegisterUserUseCase $registerUserUseCase,
+        private readonly EmailInterface $emailProvider
     ) {
     }
 
@@ -31,6 +33,16 @@ class RegisterController extends AbstractController
             try {
                 $userId = uniqid('user_', true);
                 $this->registerUserUseCase->execute($userId, $email, $password);
+
+                $result = $this->emailProvider->sendEmail(
+                    $email,
+                    'Bienvenue sur TierList',
+                    '<h1>Merci pour votre inscription !</h1><p>Bienvenue sur TierList.</p>'
+                );
+                if (!$result['success']) {
+                    $this->addFlash('warning', 'Inscription réussie, mais l\'email de bienvenue n\'a pas pu être envoyé.');
+                }
+
                 $this->addFlash('success', 'Inscription réussie ! Vous pouvez maintenant vous connecter.');
                 return $this->redirectToRoute('login');
             } catch (UserAlreadyExistsException $e) {

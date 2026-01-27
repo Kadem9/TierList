@@ -57,3 +57,12 @@ services:
 
     App\Domain\Port\PaymentProviderInterface:
         alias: App\Infrastructure\Service\Payment\StripePaymentAdapter
+
+    App\Domain\Port\EmailInterface:
+        alias: App\Infrastructure\Service\Email\MailjetAdapter
+    App\Infrastructure\Service\Email\MailjetAdapter:
+        arguments:
+            $keyPublic: "%env(API_MAILJET_PUBLIC)%"
+            $keyPrivate: "%env(API_MAILJET_SECRET)%"
+            $expeditorEmail: "%env(EXPEDITOR_EMAIL)%"
+            $expeditorName: "%env(EXPEDITOR_NAME)%"
